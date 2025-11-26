@@ -1,594 +1,685 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RareBird Games | Sinfeld: Evil Resident</title>
+    <title>RareBird Games | Investor Return Model</title>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@300;400;600&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <!-- Fonts matching the Logo Aesthetic -->
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        bird: {
+                            red: '#EF5B42',    /* From Logo Sky */
+                            gold: '#EBC466',   /* From Logo Sand */
+                            black: '#121212',  /* Warm Black */
+                            paper: '#F3F2EA',  /* Off White */
+                            gray: '#2A2A2A'
+                        }
+                    },
+                    fontFamily: {
+                        display: ['Anton', 'sans-serif'],
+                        mono: ['Space Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        /* Custom Cursor & Base Styles */
         body {
-            background-color: #050505;
-            color: #e5e5e5;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Space Mono', monospace;
+            background-color: #121212;
+            color: #F3F2EA;
             overflow-x: hidden;
-            cursor: default; /* Let custom cursor handle pointer if needed, or standard */
         }
 
-        /* Typography */
-        h1, h2, h3, h4, h5 {
-            font-family: 'Oswald', sans-serif;
-            text-transform: uppercase;
-        }
-        
-        .font-mono {
-            font-family: 'Courier Prime', monospace;
-        }
-
-        /* CRT / VHS Effects */
-        .scanlines {
+        /* Vintage Paper Texture Overlay */
+        .paper-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(
-                to bottom,
-                rgba(255,255,255,0),
-                rgba(255,255,255,0) 50%,
-                rgba(0,0,0,0.2) 50%,
-                rgba(0,0,0,0.2)
-            );
-            background-size: 100% 4px;
             pointer-events: none;
-            z-index: 9998;
-            opacity: 0.4;
+            z-index: 50;
+            opacity: 0.08;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            mix-blend-mode: overlay;
         }
 
-        .vignette {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, rgba(0,0,0,0) 60%, rgba(0,0,0,0.8) 100%);
-            pointer-events: none;
-            z-index: 9997;
+        /* Hard Edges & Borders (Logo Style) */
+        .retro-card {
+            background: #181818;
+            border: 2px solid #2A2A2A;
+            transition: all 0.2s ease;
+        }
+        .retro-card:hover {
+            border-color: #EF5B42;
+            transform: translate(-2px, -2px);
+            box-shadow: 4px 4px 0px #EF5B42;
         }
 
-        /* Grain Effect (Simulated) */
-        .noise {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            opacity: 0.05;
-            z-index: 9996;
-            pointer-events: none;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-        }
-
-        /* Animations */
-        @keyframes glitch {
-            0% { transform: translate(0) }
-            20% { transform: translate(-2px, 2px) }
-            40% { transform: translate(-2px, -2px) }
-            60% { transform: translate(2px, 2px) }
-            80% { transform: translate(2px, -2px) }
-            100% { transform: translate(0) }
-        }
-
-        .glitch-hover:hover {
-            animation: glitch 0.2s cubic-bezier(.25, .46, .45, .94) both infinite;
-            color: #ff3333;
-            text-shadow: 2px 2px #00ffff;
-        }
-
-        .fade-in {
-            animation: fadeIn 0.5s ease-in-out forwards;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Buttons */
         .btn-primary {
-            background-color: white;
-            color: black;
-            padding: 0.75rem 2rem;
-            font-family: 'Oswald', sans-serif;
+            background-color: #EF5B42;
+            color: #121212;
+            border: 2px solid #EF5B42;
+            text-transform: uppercase;
             font-weight: 700;
-            letter-spacing: 0.1em;
-            transition: all 0.3s ease;
-            border: 1px solid white;
-            cursor: pointer;
+            letter-spacing: 1px;
+            transition: all 0.2s;
         }
-
         .btn-primary:hover {
             background-color: transparent;
-            color: white;
-            transform: scale(1.05);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+            color: #EF5B42;
+            box-shadow: 4px 4px 0px #EBC466;
+            transform: translate(-2px, -2px);
         }
 
-        /* Page Visibility Logic */
-        .page-section {
-            display: none;
-            min-height: 100vh;
-            padding-top: 80px; /* Navbar height */
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
         }
-        
-        .page-section.active {
-            display: block;
+        ::-webkit-scrollbar-track {
+            background: #121212;
+            border-left: 1px solid #333;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border: 2px solid #121212;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #EF5B42;
         }
 
-        /* Ghost Cursor Canvas Container */
-        #ghost-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0; /* Behind content */
-            pointer-events: none;
-            mix-blend-mode: screen;
+        .display-text {
+            font-family: 'Anton', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
-        
-        /* Press Kit Grid */
-        .press-grid {
-            display: grid;
-            grid-template-columns: 300px 1fr;
-            gap: 3rem;
+
+        /* Animation */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        @media(max-width: 768px) {
-            .press-grid { grid-template-columns: 1fr; }
+        .animate-up {
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
     </style>
 </head>
-<body>
+<body class="antialiased selection:bg-bird-gold selection:text-bird-black">
 
-    <!-- Effects Overlays -->
-    <div class="scanlines"></div>
-    <div class="vignette"></div>
-    <div class="noise"></div>
-    <canvas id="ghost-canvas"></canvas>
+    <div class="paper-overlay"></div>
 
     <!-- Navigation -->
-    <nav class="fixed w-full z-50 top-0 left-0 px-6 py-6 flex justify-between items-center bg-black/80 backdrop-blur-sm border-b border-white/10">
-        <div onclick="router('home')" class="text-2xl font-bold tracking-widest glitch-hover cursor-pointer select-none">
-            RAREBIRD<span class="text-red-600">GAMES</span>
+    <nav class="fixed top-0 w-full z-40 border-b-2 border-bird-gray bg-bird-black/95 backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <img src="android-chrome-192x192.png" alt="RareBird Games Logo" class="w-10 h-10 border-2 border-bird-paper object-cover">
+                <span class="font-display text-2xl tracking-wide text-bird-paper">RAREBIRD<span class="text-bird-red">GAMES</span></span>
+            </div>
+            <a href="#investor-calculator" class="hidden md:block px-6 py-2 text-xs font-bold uppercase tracking-widest border-2 border-bird-paper hover:bg-bird-paper hover:text-bird-black transition-all">
+                Calculator_v1.0
+            </a>
         </div>
-        
-        <div class="hidden md:flex space-x-8 font-mono text-sm tracking-widest">
-            <button onclick="router('home')" class="hover:text-red-500 transition-colors uppercase">Home</button>
-            <button onclick="router('news')" class="hover:text-red-500 transition-colors uppercase">News</button>
-            <button onclick="router('careers')" class="hover:text-red-500 transition-colors uppercase">Careers</button>
-            <button onclick="router('press')" class="hover:text-red-500 transition-colors uppercase">Press Kit</button>
-            <button onclick="router('contact')" class="hover:text-red-500 transition-colors uppercase">Contact</button>
-        </div>
-
-        <!-- Mobile Menu Button -->
-        <button class="md:hidden text-white" onclick="alert('Mobile menu would open here')">
-            <i data-lucide="menu" class="w-8 h-8"></i>
-        </button>
     </nav>
 
-    <!-- ==================== PAGE: HOME ==================== -->
-    <section id="home" class="page-section active fade-in relative">
-        <!-- Hero -->
-        <div class="relative h-[calc(100vh-80px)] flex flex-col justify-center items-center text-center z-10">
-            <!-- Background Image (dimmed) -->
-            <div class="absolute inset-0 z-[-1] overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1485846234645-a62644f84728?q=80&w=2059&auto=format&fit=crop" 
-                     alt="Sinfeld Background" 
-                     class="w-full h-full object-cover opacity-30 grayscale contrast-125">
-                <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black"></div>
+    <!-- Hero Section -->
+    <header class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden bg-bird-black">
+        <!-- Background Asset: Hallway Poster with Tint -->
+        <div class="absolute inset-0 z-0">
+            <img src="16_9_Horizontal_Logo_Placement_2.jpg" alt="Sinfeld Evil Resident Background" class="w-full h-full object-cover opacity-20 grayscale brightness-75 contrast-125">
+            <div class="absolute inset-0 bg-gradient-to-t from-bird-black via-transparent to-transparent"></div>
+            <!-- Halftone pattern effect overlay -->
+            <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#333 1px, transparent 1px); background-size: 4px 4px;"></div>
+        </div>
+
+        <div class="relative z-10 max-w-5xl mx-auto px-6 text-center border-x-0 md:border-x border-dashed border-bird-gray py-12">
+            <!-- Sinfeld Logo Asset -->
+            <div class="flex justify-center mb-8 animate-up">
+                <img src="SinfeldLogo_v1.jpg" alt="Sinfeld: Evil Resident Logo" class="h-24 md:h-32 object-contain drop-shadow-2xl grayscale hover:grayscale-0 transition-all duration-500 cursor-help">
+            </div>
+            
+            <div class="inline-block border border-bird-gold text-bird-gold px-3 py-1 text-xs font-bold uppercase mb-6 tracking-widest bg-bird-gold/10">
+                // Internal Memo: Investor Briefing
             </div>
 
-            <p class="text-red-600 tracking-[0.5em] font-mono text-sm mb-4 animate-pulse">NOW IN DEVELOPMENT</p>
-            <h1 class="text-6xl md:text-9xl font-black mb-2 tracking-tighter select-none drop-shadow-[0_0_15px_rgba(177,158,239,0.5)]">
-                SINFELD
+            <h1 class="font-display text-6xl md:text-8xl text-bird-paper mb-6 leading-[0.9] animate-up" style="animation-delay: 0.1s;">
+                REVENUE <span class="text-bird-red">ARCHITECTURE</span>
             </h1>
-            <h2 class="text-3xl md:text-5xl font-bold text-gray-300 mb-8 tracking-widest">
-                EVIL RESIDENT
-            </h2>
             
-            <p class="text-xl md:text-2xl font-mono mb-12 max-w-2xl mx-auto text-gray-400">
-                "NOTHING MATTERS."
+            <p class="text-lg md:text-xl text-stone-400 max-w-2xl mx-auto mb-10 leading-relaxed font-mono animate-up" style="animation-delay: 0.2s;">
+                A transparent breakdown of how RareBird Games prioritizes investor repayment through flexible publishing pathways.
             </p>
 
-            <div class="flex flex-col md:flex-row gap-6 justify-center">
-                <button onclick="window.open('https://www.youtube.com/watch?v=OGKrxZYcN_s', '_blank')" class="btn-primary">
-                    WATCH TRAILER
-                </button>
-                <button onclick="window.open('https://store.steampowered.com/app/1710910/Sinfeld_Evil_Resident/', '_blank')" class="px-8 py-3 border border-white text-white font-bold hover:bg-white hover:text-black transition-all font-mono">
-                    WISHLIST ON STEAM
-                </button>
+            <div class="flex flex-col sm:flex-row gap-6 justify-center animate-up" style="animation-delay: 0.3s;">
+                <a href="#revenue-model" class="btn-primary px-8 py-4">
+                    Explore Model
+                </a>
+                <a href="#investor-calculator" class="px-8 py-4 text-bird-paper font-bold uppercase tracking-widest border-2 border-bird-gray hover:border-bird-gold hover:text-bird-gold transition-colors">
+                    Run Scenarios
+                </a>
             </div>
         </div>
+    </header>
 
-        <!-- Featured Info -->
-        <div class="bg-black py-24 px-6 border-t border-white/10">
-            <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                <div class="space-y-6">
-                    <h3 class="text-4xl font-bold text-white">A Show About Nothing... <span class="text-red-600 block mt-2">But The Horror Is Real.</span></h3>
-                    <p class="font-mono text-gray-400 leading-relaxed">
-                        You are Donathan, a comedian orphan trapped in the haunted apartment of your idol, now filled with rifts born from narcissism and spite. 
-                    </p>
-                    <p class="font-mono text-gray-400 leading-relaxed">
-                        Will you muster the courage to crawl through those horrific rifts and save what's left of your childhood hero's soul... or will their past consume you?
-                    </p>
-                    <div class="pt-4">
-                         <button onclick="router('press')" class="text-red-500 hover:text-white font-mono underline underline-offset-4">READ FULL SYNOPSIS &rarr;</button>
-                    </div>
-                </div>
-                <div class="relative">
-                    <div class="absolute inset-0 bg-red-600 blur-[50px] opacity-20"></div>
-                    <img src="https://images.unsplash.com/photo-1626128724786-34a056d7277e?q=80&w=2070&auto=format&fit=crop" class="relative z-10 border border-gray-800 rounded-sm grayscale hover:grayscale-0 transition duration-500 shadow-2xl" alt="Gameplay">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ==================== PAGE: NEWS ==================== -->
-    <section id="news" class="page-section fade-in bg-[#0a0a0a]">
-        <div class="max-w-5xl mx-auto px-6 py-12">
-            <h2 class="text-5xl font-bold mb-12 border-b border-white/20 pb-6">LATEST NEWS</h2>
-            
-            <div class="space-y-12">
-                <!-- News Item 1 -->
-                <article class="group cursor-pointer">
-                    <div class="flex flex-col md:flex-row gap-6">
-                        <div class="w-full md:w-1/3 h-48 bg-gray-900 overflow-hidden border border-white/10">
-                            <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition duration-500 grayscale group-hover:grayscale-0">
-                        </div>
-                        <div class="flex-1 space-y-3">
-                            <div class="flex items-center gap-3 font-mono text-xs text-red-500">
-                                <span>OCT 13, 2025</span>
-                                <span>•</span>
-                                <span>ANNOUNCEMENT</span>
-                            </div>
-                            <h3 class="text-2xl font-bold group-hover:text-red-500 transition-colors">HALLOWEEN UPDATE: 31 DAYS OF SPOOKS</h3>
-                            <p class="text-gray-400 font-mono text-sm leading-relaxed">
-                                We are diving deep into the development of Sinfeld Remastered. Join us as we reveal new mechanics, the "Death Zone", and how we turned a sitcom apartment into a nightmare labyrinth.
-                            </p>
-                            <span class="text-white text-xs border-b border-transparent group-hover:border-red-500 inline-block pb-1">READ MORE</span>
-                        </div>
-                    </div>
-                </article>
-
-                <!-- News Item 2 -->
-                <article class="group cursor-pointer">
-                    <div class="flex flex-col md:flex-row gap-6">
-                        <div class="w-full md:w-1/3 h-48 bg-gray-900 overflow-hidden border border-white/10">
-                            <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition duration-500 grayscale group-hover:grayscale-0">
-                        </div>
-                        <div class="flex-1 space-y-3">
-                            <div class="flex items-center gap-3 font-mono text-xs text-red-500">
-                                <span>APR 01, 2025</span>
-                                <span>•</span>
-                                <span>DEMO RELEASE</span>
-                            </div>
-                            <h3 class="text-2xl font-bold group-hover:text-red-500 transition-colors">FREE DEMO NOW AVAILABLE ON STEAM</h3>
-                            <p class="text-gray-400 font-mono text-sm leading-relaxed">
-                                No joke. The demo is live. Experience the prologue of Donathan's journey. Warning: Performance optimizations are ongoing. Expect roughness around the edges.
-                            </p>
-                            <span class="text-white text-xs border-b border-transparent group-hover:border-red-500 inline-block pb-1">READ MORE</span>
-                        </div>
-                    </div>
-                </article>
-            </div>
-        </div>
-    </section>
-
-    <!-- ==================== PAGE: CAREERS ==================== -->
-    <section id="careers" class="page-section fade-in bg-[#0a0a0a]">
-        <div class="max-w-4xl mx-auto px-6 py-12 text-center">
-            <h2 class="text-5xl font-bold mb-6">WORK WITH US</h2>
-            <p class="text-gray-400 font-mono mb-12 max-w-2xl mx-auto">
-                RareBird Games is a small, independent collective. We prioritize vision over volume. Currently, we are not actively hiring full-time positions, but we are always open to collaborating with talented freelancers.
-            </p>
-
-            <div class="grid grid-cols-1 gap-6 text-left">
-                <div class="border border-white/20 p-6 hover:bg-white/5 transition cursor-pointer group">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h3 class="text-xl font-bold mb-2 group-hover:text-red-500">3D Environment Artist (Freelance)</h3>
-                            <p class="text-xs font-mono text-gray-500">REMOTE • CONTRACT</p>
-                        </div>
-                        <span class="px-3 py-1 border border-white/30 text-xs font-mono">APPLY</span>
-                    </div>
-                </div>
-
-                <div class="border border-white/20 p-6 hover:bg-white/5 transition cursor-pointer group">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h3 class="text-xl font-bold mb-2 group-hover:text-red-500">Unity/Unreal Generalist</h3>
-                            <p class="text-xs font-mono text-gray-500">LOS ANGELES / REMOTE • CONTRACT</p>
-                        </div>
-                        <span class="px-3 py-1 border border-white/30 text-xs font-mono">APPLY</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ==================== PAGE: PRESS KIT ==================== -->
-    <section id="press" class="page-section fade-in bg-[#0e0e0e]">
-        <div class="max-w-7xl mx-auto px-6 py-12">
-            <div class="mb-12 border-b border-white/20 pb-6 flex flex-col md:flex-row justify-between items-end">
-                <div>
-                    <h2 class="text-6xl font-black mb-2">PRESS KIT</h2>
-                    <p class="font-mono text-red-500">SINFELD: EVIL RESIDENT</p>
-                </div>
-                <button class="btn-primary mt-4 md:mt-0 text-sm px-6 py-2">DOWNLOAD ALL ASSETS (.ZIP)</button>
+    <!-- The Dual Path Section -->
+    <section id="revenue-model" class="py-24 relative border-t-2 border-bird-gray bg-[#161616]">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="font-display text-4xl md:text-5xl mb-4 text-bird-paper">ADAPTIVE REVENUE PATHS</h2>
+                <div class="w-24 h-2 bg-bird-red mx-auto mb-6"></div>
+                <p class="text-stone-400 max-w-2xl mx-auto">
+                    [SYSTEM_NOTE]: We haven't signed a publisher yet. Our repayment model adapts to secure your return regardless of the distribution method.
+                </p>
             </div>
 
-            <div class="press-grid">
-                <!-- Left Sidebar: Fact Sheet -->
-                <aside class="space-y-8">
-                    <div class="bg-black/50 p-6 border border-white/10">
-                        <h4 class="text-xl font-bold mb-4 text-white border-b border-white/20 pb-2">FACT SHEET</h4>
-                        <ul class="space-y-4 font-mono text-sm text-gray-400">
-                            <li>
-                                <strong class="text-white block mb-1">DEVELOPER:</strong>
-                                RareBird Games<br>Based in Los Angeles, CA
-                            </li>
-                            <li>
-                                <strong class="text-white block mb-1">RELEASE DATE:</strong>
-                                TBD (Demo Available Now)
-                            </li>
-                            <li>
-                                <strong class="text-white block mb-1">PLATFORMS:</strong>
-                                Steam (PC)<br>Planned: PS5, Xbox Series X|S
-                            </li>
-                            <li>
-                                <strong class="text-white block mb-1">WEBSITE:</strong>
-                                rarebirdgames.com
-                            </li>
-                            <li>
-                                <strong class="text-white block mb-1">PRICE:</strong>
-                                USD $19.99 (Estimated)
-                            </li>
-                            <li>
-                                <strong class="text-white block mb-1">PRESS CONTACT:</strong>
-                                press@rarebirdgames.com
-                            </li>
-                        </ul>
-                    </div>
+            <!-- Toggle Switch (Retro Style) -->
+            <div class="flex justify-center mb-12">
+                <div class="border-2 border-bird-gray p-1 inline-flex bg-bird-black">
+                    <button onclick="switchPath('publisher')" id="btn-pub" class="px-6 py-3 text-sm font-bold uppercase transition-all bg-bird-paper text-bird-black border border-bird-paper">
+                        PATH A: PUBLISHER
+                    </button>
+                    <button onclick="switchPath('self')" id="btn-self" class="px-6 py-3 text-sm font-bold uppercase transition-all text-stone-500 hover:text-bird-paper border border-transparent">
+                        PATH B: SELF-PUBLISH
+                    </button>
+                </div>
+            </div>
+
+            <!-- Content Container -->
+            <div class="grid md:grid-cols-12 gap-10 items-start">
+                <!-- Visual Flowchart (Left) -->
+                <div class="md:col-span-7 border-2 border-bird-gray bg-bird-black p-8 relative min-h-[400px]">
+                    <div class="absolute top-0 left-0 bg-bird-gray text-xs px-2 py-1 text-bird-paper font-bold">FIG 1.1</div>
                     
-                    <div class="bg-black/50 p-6 border border-white/10">
-                        <h4 class="text-xl font-bold mb-4 text-white">SOCIALS</h4>
-                        <div class="flex gap-4 text-gray-400">
-                            <i data-lucide="twitter" class="hover:text-white cursor-pointer"></i>
-                            <i data-lucide="youtube" class="hover:text-white cursor-pointer"></i>
-                            <i data-lucide="instagram" class="hover:text-white cursor-pointer"></i>
+                    <!-- Publisher Flow -->
+                    <div id="flow-publisher" class="space-y-6 transition-all duration-500">
+                        <div class="flex items-center p-4 border border-stone-800 bg-stone-900/50">
+                            <div class="w-12 h-12 border-2 border-stone-600 flex items-center justify-center mr-4 text-sm font-bold text-stone-400">01</div>
+                            <div>
+                                <h4 class="font-bold text-stone-300 uppercase">Platform Fees</h4>
+                                <p class="text-xs text-stone-500 font-mono">Standard ~30% fee deducted.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-center"><div class="h-8 w-px bg-stone-700"></div></div>
+                        
+                        <div class="flex items-center p-4 border border-bird-gold bg-bird-gold/10">
+                            <div class="w-12 h-12 border-2 border-bird-gold flex items-center justify-center mr-4 text-sm font-bold text-bird-gold">02</div>
+                            <div>
+                                <h4 class="font-bold text-bird-gold uppercase">Publisher Recoup</h4>
+                                <p class="text-xs text-bird-gold/70 font-mono">Pub gets 100% until costs repaid.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-center"><div class="h-8 w-px bg-stone-700"></div></div>
+
+                        <div class="flex items-center p-4 border-2 border-bird-red bg-bird-red/10 shadow-[4px_4px_0px_#EF5B42]">
+                            <div class="w-12 h-12 bg-bird-red text-bird-black flex items-center justify-center mr-4 text-sm font-bold">03</div>
+                            <div>
+                                <h4 class="font-bold text-bird-red uppercase">Revenue Split + Repayment</h4>
+                                <p class="text-xs text-bird-red/80 font-mono">RareBird pays investors from share.</p>
+                            </div>
                         </div>
                     </div>
-                </aside>
 
-                <!-- Right Content: Description & Assets -->
-                <div class="space-y-12">
-                    <!-- Description -->
-                    <div>
-                        <h3 class="text-3xl font-bold mb-4">DESCRIPTION</h3>
-                        <p class="font-mono text-gray-300 leading-relaxed mb-4">
-                            <strong>Sinfeld: Evil Resident</strong> is a surreal, narrative-driven horror-comedy experience inspired by the psychological dread of survival horror classics, but with the absurdity of a sitcom gone wrong.
+                    <!-- Self-Publish Flow (Hidden by default) -->
+                    <div id="flow-self" class="space-y-6 transition-all duration-500 hidden">
+                        <div class="flex items-center p-4 border border-stone-800 bg-stone-900/50">
+                            <div class="w-12 h-12 border-2 border-stone-600 flex items-center justify-center mr-4 text-sm font-bold text-stone-400">01</div>
+                            <div>
+                                <h4 class="font-bold text-stone-300 uppercase">Platform Fees</h4>
+                                <p class="text-xs text-stone-500 font-mono">Standard ~30% fee deducted.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-center"><div class="h-8 w-px bg-stone-700"></div></div>
+
+                        <!-- Skipping Recoup -->
+                        <div class="p-3 text-center border border-dashed border-stone-600 opacity-50">
+                            <span class="text-xs uppercase tracking-widest font-bold text-stone-500">// RECOUP PHASE BYPASSED //</span>
+                        </div>
+                        
+                        <div class="flex justify-center"><div class="h-8 w-px bg-stone-700"></div></div>
+
+                        <div class="flex items-center p-4 border-2 border-bird-red bg-bird-red/10 shadow-[4px_4px_0px_#EF5B42]">
+                            <div class="w-12 h-12 bg-bird-red text-bird-black flex items-center justify-center mr-4 text-sm font-bold">02</div>
+                            <div>
+                                <h4 class="font-bold text-bird-red uppercase">Immediate Repayment</h4>
+                                <p class="text-xs text-bird-red/80 font-mono">100% of Net Rev to Studio -> Investors.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text Description (Right) -->
+                <div class="md:col-span-5 space-y-6 pt-4">
+                    <div id="text-publisher" class="animate-up">
+                        <h3 class="font-display text-3xl text-bird-paper">THE PUBLISHER PATH</h3>
+                        <p class="text-stone-400 leading-relaxed text-sm">
+                            Publisher handles marketing/distribution costs. They typically take 100% of revenue until those costs are repaid.
                         </p>
-                        <p class="font-mono text-gray-300 leading-relaxed">
-                            Players become Donathan, an orphan comedian trapped in the eerie apartment of his comedic idol. This once-normal apartment quickly reveals itself as a twisted maze of secret compartments and unsettling relics. Enter the "Death Zone": crawl through disturbing rifts into surreal nightmare worlds confronting manifestations of personal demons.
+                        <div class="border-l-2 border-bird-gold pl-4 space-y-2 mt-4">
+                            <p class="text-xs text-bird-gold font-bold uppercase">Pro:</p>
+                            <p class="text-xs text-stone-500">Lower risk due to marketing support.</p>
+                            <p class="text-xs text-bird-gold font-bold uppercase mt-2">Con:</p>
+                            <p class="text-xs text-stone-500">Payment delayed until recoup finishes.</p>
+                        </div>
+                    </div>
+
+                    <div id="text-self" class="hidden animate-up">
+                        <h3 class="font-display text-3xl text-bird-paper">THE SELF-PUBLISH PATH</h3>
+                        <p class="text-stone-400 leading-relaxed text-sm">
+                            We market the game ourselves. This removes the "middle man", accelerating the timeline for investor ROI.
                         </p>
-                    </div>
-
-                    <!-- Images Grid -->
-                    <div>
-                        <h3 class="text-3xl font-bold mb-6">SCREENSHOTS</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <img src="https://images.unsplash.com/photo-1519074069444-1ba4fff66d16?q=80&w=800&auto=format&fit=crop" class="w-full h-48 object-cover border border-white/10 bg-gray-800">
-                            <img src="https://images.unsplash.com/photo-1605810230434-7631ac76ec81?q=80&w=800&auto=format&fit=crop" class="w-full h-48 object-cover border border-white/10 bg-gray-800">
-                            <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=800&auto=format&fit=crop" class="w-full h-48 object-cover border border-white/10 bg-gray-800">
-                            <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=800&auto=format&fit=crop" class="w-full h-48 object-cover border border-white/10 bg-gray-800">
+                        <div class="border-l-2 border-bird-red pl-4 space-y-2 mt-4">
+                            <p class="text-xs text-bird-red font-bold uppercase">Pro:</p>
+                            <p class="text-xs text-stone-500">Revenue flows immediately after launch.</p>
+                            <p class="text-xs text-bird-red font-bold uppercase mt-2">Pro:</p>
+                            <p class="text-xs text-stone-500">Higher revenue per unit sold.</p>
                         </div>
-                    </div>
-
-                    <!-- Logo Section -->
-                    <div>
-                        <h3 class="text-3xl font-bold mb-6">LOGOS</h3>
-                        <div class="p-8 bg-white/5 border border-white/10 flex items-center justify-center">
-                            <h2 class="text-4xl font-black tracking-widest text-white">RAREBIRD<span class="text-red-600">GAMES</span></h2>
-                        </div>
-                        <button class="text-xs font-mono mt-2 text-gray-500 hover:text-white underline">DOWNLOAD LOGO PACK (PNG/SVG)</button>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ==================== PAGE: CONTACT ==================== -->
-    <section id="contact" class="page-section fade-in bg-black">
-        <div class="max-w-xl mx-auto px-6 py-24 text-center">
-            <i data-lucide="mail" class="w-12 h-12 mx-auto mb-6 text-red-600"></i>
-            <h2 class="text-4xl font-bold mb-2">GET IN TOUCH</h2>
-            <p class="text-gray-500 mb-8 font-mono text-sm">FOR PRESS INQUIRIES, PLEASE EMAIL PRESS@RAREBIRDGAMES.COM</p>
-            
-            <form class="space-y-6 text-left" onsubmit="event.preventDefault(); alert('Message Sent! We will screech back at you shortly.');">
+    <!-- Priority Repayment & Convertible Notes -->
+    <section class="py-24 bg-bird-black border-t-2 border-bird-gray relative">
+        <!-- Background grid lines -->
+        <div class="absolute inset-0 opacity-5" style="background-image: linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px); background-size: 40px 40px;"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-16">
+                
+                <!-- Priority Repayment -->
                 <div>
-                    <label class="font-mono text-xs text-gray-500 block mb-1">NAME</label>
-                    <input type="text" class="input-field w-full bg-white/10 border border-white/20 p-3 text-white focus:border-red-500 outline-none font-mono">
+                    <h2 class="font-display text-4xl mb-6 flex items-center gap-4">
+                        <span class="w-10 h-10 border-2 border-bird-paper text-bird-paper flex items-center justify-center text-xl">1</span>
+                        PRIORITY REPAYMENT
+                    </h2>
+                    <p class="text-stone-400 mb-8 font-mono text-sm">
+                        Investors are top of the waterfall. We allocate a significant percentage to a Repayment Pool until principal is returned.
+                    </p>
+                    <div class="retro-card p-6">
+                        <h4 class="font-bold text-bird-paper mb-4 uppercase tracking-wider border-b border-stone-700 pb-2">Pro Rata Calculation</h4>
+                        
+                        <div class="font-mono text-sm space-y-3">
+                            <div class="flex justify-between">
+                                <span class="text-stone-500">Total Raised:</span>
+                                <span class="text-bird-paper">$409,000</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-stone-500">Your Investment:</span>
+                                <span class="text-bird-red">$40,900 (10%)</span>
+                            </div>
+                            <div class="h-px bg-stone-700 my-2"></div>
+                            <div class="flex justify-between bg-bird-gray p-2 border border-stone-600">
+                                <span class="text-bird-gold font-bold">Your Share of Repayments:</span>
+                                <span class="text-bird-gold font-bold">10%</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+                <!-- Convertible Notes -->
                 <div>
-                    <label class="font-mono text-xs text-gray-500 block mb-1">EMAIL</label>
-                    <input type="email" class="input-field w-full bg-white/10 border border-white/20 p-3 text-white focus:border-red-500 outline-none font-mono">
+                    <h2 class="font-display text-4xl mb-6 flex items-center gap-4">
+                        <span class="w-10 h-10 border-2 border-bird-paper text-bird-paper flex items-center justify-center text-xl">2</span>
+                        FUTURE EQUITY
+                    </h2>
+                    <p class="text-stone-400 mb-8 font-mono text-sm">
+                        Investment starts as debt and converts to equity.
+                    </p>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <!-- Card 1 -->
+                        <div class="retro-card p-4 text-center group">
+                            <div class="text-bird-gold mb-2 flex justify-center">
+                                <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <h4 class="font-bold text-bird-paper text-sm uppercase">Debt</h4>
+                            <p class="text-[10px] text-stone-500 mt-1">Principal is protected.</p>
+                        </div>
+                        <!-- Card 2 -->
+                        <div class="retro-card p-4 text-center group">
+                            <div class="text-bird-red mb-2 flex justify-center">
+                                <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                            </div>
+                            <h4 class="font-bold text-bird-paper text-sm uppercase">Trigger</h4>
+                            <p class="text-[10px] text-stone-500 mt-1">Converts on valuation event.</p>
+                        </div>
+                        <!-- Card 3 -->
+                        <div class="retro-card p-4 text-center group">
+                            <div class="text-bird-paper mb-2 flex justify-center">
+                                <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                            </div>
+                            <h4 class="font-bold text-bird-paper text-sm uppercase">Equity</h4>
+                            <p class="text-[10px] text-stone-500 mt-1">Ownership in studio.</p>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <label class="font-mono text-xs text-gray-500 block mb-1">MESSAGE</label>
-                    <textarea rows="5" class="input-field w-full bg-white/10 border border-white/20 p-3 text-white focus:border-red-500 outline-none font-mono"></textarea>
-                </div>
-                <button type="submit" class="w-full bg-white text-black font-bold py-4 px-8 hover:bg-red-600 hover:text-white transition-colors font-mono tracking-widest uppercase border border-white">
-                    SEND MESSAGE
-                </button>
-            </form>
+            </div>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="py-12 bg-black border-t border-gray-900 text-center relative z-10">
-        <div class="flex justify-center space-x-8 mb-8">
-            <a href="#" class="text-gray-500 hover:text-white transition-colors"><i data-lucide="twitter" class="w-6 h-6"></i></a>
-            <a href="#" class="text-gray-500 hover:text-white transition-colors"><i data-lucide="youtube" class="w-6 h-6"></i></a>
-            <a href="#" class="text-gray-500 hover:text-white transition-colors"><i data-lucide="instagram" class="w-6 h-6"></i></a>
-            <a href="#" class="text-gray-500 hover:text-white transition-colors"><i data-lucide="gamepad-2" class="w-6 h-6"></i></a>
+    <!-- Scenarios -->
+    <section class="py-24 relative overflow-hidden bg-[#161616] border-t-2 border-bird-gray">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="font-display text-4xl text-center mb-16 uppercase">Projected Outcomes</h2>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Modest -->
+                <div class="retro-card p-8 bg-bird-black opacity-60 hover:opacity-100">
+                    <div class="text-center border-b border-stone-800 pb-4 mb-4">
+                        <div class="text-xs font-bold uppercase tracking-widest text-stone-500">Conservative</div>
+                        <div class="font-display text-5xl text-stone-300 mt-2">~20k</div>
+                        <div class="text-xs text-stone-500 font-mono">Units Sold</div>
+                    </div>
+                    <ul class="space-y-3 text-xs font-mono text-stone-400">
+                        <li class="flex gap-2"><span>[x]</span> Studio covers costs.</li>
+                        <li class="flex gap-2"><span>[x]</span> Slow repayment.</li>
+                        <li class="flex gap-2"><span>[x]</span> Debt remains.</li>
+                    </ul>
+                </div>
+
+                <!-- Solid -->
+                <div class="retro-card p-8 border-bird-gold/50">
+                    <div class="text-center border-b border-bird-gold/30 pb-4 mb-4">
+                        <div class="text-xs font-bold uppercase tracking-widest text-bird-gold">Target</div>
+                        <div class="font-display text-5xl text-white mt-2">~50k</div>
+                        <div class="text-xs text-stone-500 font-mono">Units Sold</div>
+                    </div>
+                    <ul class="space-y-3 text-xs font-mono text-stone-300">
+                        <li class="flex gap-2"><span class="text-bird-gold">>></span> Rapid repayment.</li>
+                        <li class="flex gap-2"><span class="text-bird-gold">>></span> Financial stability.</li>
+                        <li class="flex gap-2"><span class="text-bird-gold">>></span> Next game funded.</li>
+                    </ul>
+                </div>
+
+                <!-- Strong -->
+                <div class="retro-card p-8 border-bird-red shadow-[0_0_20px_rgba(239,91,66,0.1)]">
+                    <div class="text-center border-b border-bird-red/30 pb-4 mb-4">
+                        <div class="text-xs font-bold uppercase tracking-widest text-bird-red">Breakout</div>
+                        <div class="font-display text-5xl text-white mt-2">100k+</div>
+                        <div class="text-xs text-stone-500 font-mono">Units Sold</div>
+                    </div>
+                    <ul class="space-y-3 text-xs font-mono text-stone-300">
+                        <li class="flex gap-2"><span class="text-bird-red">!!</span> Instant repayment.</li>
+                        <li class="flex gap-2"><span class="text-bird-red">!!</span> Equity spike.</li>
+                        <li class="flex gap-2"><span class="text-bird-red">!!</span> High ROI multiple.</li>
+                    </ul>
+                </div>
+            </div>
         </div>
-        <p class="text-gray-600 font-mono text-xs tracking-widest">
-            &copy; 2025 RAREBIRD GAMES. ALL RIGHTS RESERVED. LOS ANGELES, CA.
-        </p>
+    </section>
+
+    <!-- Calculator Section -->
+    <section id="investor-calculator" class="py-24 bg-bird-black border-t-2 border-bird-gray">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="border-2 border-bird-gray bg-[#181818]">
+                <!-- Calc Header -->
+                <div class="p-6 border-b-2 border-bird-gray bg-bird-gray flex justify-between items-center">
+                    <div>
+                        <h2 class="font-display text-2xl text-bird-paper">RETURN SIMULATOR</h2>
+                        <p class="text-stone-400 text-xs font-mono uppercase">V1.0 // Interactive Model</p>
+                    </div>
+                    <div class="w-3 h-3 bg-bird-red animate-pulse rounded-full"></div>
+                </div>
+
+                <div class="p-8">
+                    <form id="calc-form" class="space-y-8">
+                        
+                        <!-- Top Row Inputs -->
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="space-y-2">
+                                <label for="investment" class="text-xs font-bold uppercase tracking-wide text-stone-500">Your Investment ($)</label>
+                                <input id="investment" type="number" min="0" step="1000" value="50000" required 
+                                    class="w-full bg-bird-black border-2 border-stone-700 p-3 text-bird-paper focus:border-bird-gold focus:outline-none font-mono">
+                            </div>
+                            <div class="space-y-2">
+                                <label for="investorPool" class="text-xs font-bold uppercase tracking-wide text-stone-500">Total Investor Pool ($)</label>
+                                <input id="investorPool" type="number" min="0" step="1000" value="409000"
+                                    class="w-full bg-bird-black border-2 border-stone-700 p-3 text-bird-paper focus:border-bird-gold focus:outline-none font-mono">
+                            </div>
+                        </div>
+
+                        <!-- Game Vars -->
+                        <div class="grid md:grid-cols-3 gap-6 pt-6 border-t border-dashed border-stone-800">
+                            <div class="space-y-2">
+                                <label for="units" class="text-xs font-bold uppercase tracking-wide text-stone-500">Units Sold</label>
+                                <input id="units" type="number" min="0" step="1000" value="75000" required
+                                    class="w-full bg-bird-black border-2 border-stone-700 p-3 text-bird-paper focus:border-bird-red focus:outline-none font-mono">
+                            </div>
+                            <div class="space-y-2">
+                                <label for="price" class="text-xs font-bold uppercase tracking-wide text-stone-500">Price ($)</label>
+                                <input id="price" type="number" min="0" step="1" value="20" required
+                                    class="w-full bg-bird-black border-2 border-stone-700 p-3 text-bird-paper focus:border-bird-red focus:outline-none font-mono">
+                            </div>
+                            <div class="space-y-2">
+                                <label for="platformFee" class="text-xs font-bold uppercase tracking-wide text-stone-500">Platform Fee (%)</label>
+                                <input id="platformFee" type="number" min="0" max="100" step="1" value="30"
+                                    class="w-full bg-bird-black border-2 border-stone-700 p-3 text-bird-paper focus:border-bird-red focus:outline-none font-mono">
+                            </div>
+                        </div>
+
+                        <!-- Publisher Toggle -->
+                        <div class="bg-stone-900/50 p-4 border border-stone-800">
+                            <label class="flex items-center cursor-pointer mb-4">
+                                <div class="relative">
+                                    <input id="usePublisher" type="checkbox" class="sr-only" checked>
+                                    <div class="block bg-stone-700 w-10 h-6"></div>
+                                    <div class="dot absolute left-1 top-1 bg-bird-paper w-4 h-4 transition text-bird-black flex items-center justify-center text-[8px] font-bold"></div>
+                                </div>
+                                <div class="ml-3 text-sm font-bold uppercase text-stone-300">Enable Publisher Logic</div>
+                            </label>
+
+                            <div class="grid md:grid-cols-2 gap-6 publisher-field transition-all duration-300">
+                                <div class="space-y-2">
+                                    <label for="pubRecoup" class="text-xs font-bold uppercase tracking-wide text-stone-500">Publisher Recoup ($)</label>
+                                    <input id="pubRecoup" type="number" min="0" step="50000" value="300000"
+                                        class="w-full bg-bird-black border border-stone-700 p-2 text-stone-300 font-mono text-sm">
+                                </div>
+                                <div class="space-y-2">
+                                    <label for="pubShare" class="text-xs font-bold uppercase tracking-wide text-stone-500">Pub Share (% post-recoup)</label>
+                                    <input id="pubShare" type="number" min="0" max="100" step="1" value="50"
+                                        class="w-full bg-bird-black border border-stone-700 p-2 text-stone-300 font-mono text-sm">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" id="calc-button" class="btn-primary w-full py-4 text-lg shadow-[4px_4px_0px_#EBC466]">
+                            RUN CALCULATION
+                        </button>
+                    </form>
+
+                    <!-- Results -->
+                    <div id="calc-results" class="mt-12 pt-8 border-t-2 border-bird-gray opacity-50 grayscale transition-all duration-500">
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <!-- Left: Breakdown -->
+                            <div class="space-y-3 text-xs font-mono">
+                                <div class="flex justify-between text-stone-500">
+                                    <span>Gross Revenue:</span>
+                                    <span id="res-gross" class="text-bird-paper font-bold">$0</span>
+                                </div>
+                                <div class="flex justify-between text-stone-500">
+                                    <span>Net after Platform:</span>
+                                    <span id="res-after-platform" class="text-bird-paper font-bold">$0</span>
+                                </div>
+                                <div class="flex justify-between text-stone-500">
+                                    <span>Studio Revenue Share:</span>
+                                    <span id="res-dev" class="text-bird-gold font-bold">$0</span>
+                                </div>
+                                <div class="h-px bg-stone-700 my-2"></div>
+                                <div class="flex justify-between text-bird-red font-bold">
+                                    <span>Total Investor Pool:</span>
+                                    <span id="res-pool">$0</span>
+                                </div>
+                            </div>
+
+                            <!-- Right: Your Return -->
+                            <div class="bg-bird-black p-6 border-2 border-bird-gold relative overflow-hidden">
+                                <div class="absolute -right-4 -top-4 w-16 h-16 bg-bird-gold/20 rounded-full blur-xl"></div>
+                                <div class="text-bird-gold text-xs font-bold uppercase tracking-wide mb-1">Estimated Payout</div>
+                                <div id="res-payout" class="text-4xl font-display text-bird-paper mb-4">$0</div>
+                                
+                                <div class="flex items-center gap-6 font-mono text-xs">
+                                    <div>
+                                        <div class="text-stone-500">Multiple</div>
+                                        <div id="res-multiple" class="text-lg font-bold text-bird-red">0.00x</div>
+                                    </div>
+                                    <div class="h-8 w-px bg-stone-700"></div>
+                                    <div>
+                                        <div class="text-stone-500">Equity Share</div>
+                                        <div id="res-share" class="text-lg font-bold text-stone-300">0%</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer CTA -->
+    <footer class="py-24 bg-bird-black border-t-2 border-bird-gray text-center">
+        <div class="max-w-2xl mx-auto px-6">
+            <h2 class="font-display text-5xl text-bird-paper mb-6">READY TO INVEST?</h2>
+            <p class="text-stone-400 mb-10 text-lg font-mono">
+                Join us in building the next cult classic.
+            </p>
+            <button class="btn-primary px-12 py-5 text-xl">
+                Contact Austin
+            </button>
+            <div class="mt-12 text-stone-600 text-xs font-mono uppercase tracking-widest">
+                &copy; 2024 RareBird Games.
+            </div>
+        </div>
     </footer>
 
     <!-- Scripts -->
     <script>
-        // Initialize Lucide Icons
-        lucide.createIcons();
+        /* --- Logic for Revenue Path Toggle --- */
+        function switchPath(path) {
+            const btnPub = document.getElementById('btn-pub');
+            const btnSelf = document.getElementById('btn-self');
+            const flowPub = document.getElementById('flow-publisher');
+            const flowSelf = document.getElementById('flow-self');
+            const textPub = document.getElementById('text-publisher');
+            const textSelf = document.getElementById('text-self');
 
-        // Router Logic
-        function router(pageId) {
-            // Hide all sections
-            document.querySelectorAll('.page-section').forEach(section => {
-                section.classList.remove('active');
-                section.classList.remove('fade-in'); // reset animation
-            });
-            
-            // Show target section
-            const target = document.getElementById(pageId);
-            if(target) {
-                target.classList.add('active');
-                // Trigger reflow to restart animation
-                void target.offsetWidth;
-                target.classList.add('fade-in');
-                window.scrollTo(0,0);
-            }
+            const activeClass = ['bg-bird-paper', 'text-bird-black', 'border-bird-paper'];
+            const inactiveClass = ['text-stone-500', 'hover:text-bird-paper', 'border-transparent'];
 
-            // Manage Ghost Canvas Visibility (Only visible on Home)
-            const canvas = document.getElementById('ghost-canvas');
-            if(pageId === 'home') {
-                canvas.style.display = 'block';
+            if(path === 'publisher') {
+                btnPub.classList.remove(...inactiveClass);
+                btnPub.classList.add(...activeClass);
+                btnSelf.classList.remove(...activeClass);
+                btnSelf.classList.add(...inactiveClass);
+
+                flowPub.classList.remove('hidden');
+                flowSelf.classList.add('hidden');
+                textPub.classList.remove('hidden');
+                textSelf.classList.add('hidden');
             } else {
-                canvas.style.display = 'none';
+                btnSelf.classList.remove(...inactiveClass);
+                btnSelf.classList.add(...activeClass);
+                btnPub.classList.remove(...activeClass);
+                btnPub.classList.add(...inactiveClass);
+
+                flowSelf.classList.remove('hidden');
+                flowPub.classList.add('hidden');
+                textSelf.classList.remove('hidden');
+                textPub.classList.add('hidden');
             }
         }
 
-        // ===========================
-        // GHOST CURSOR IMPLEMENTATION
-        // ===========================
-        class GhostCursor {
-            constructor() {
-                this.canvas = document.getElementById('ghost-canvas');
-                this.ctx = this.canvas.getContext('2d');
-                this.width = window.innerWidth;
-                this.height = window.innerHeight;
-                this.cursor = { x: this.width / 2, y: this.height / 2 };
-                this.points = [];
-                this.trailLength = 50; // Matches user prop
-                this.color = "#B19EEF"; // Matches user prop
-                
-                this.init();
+        /* --- Logic for Calculator --- */
+        const toggleInput = document.getElementById('usePublisher');
+        const toggleDot = document.querySelector('.dot');
+        const pubFields = document.querySelectorAll('.publisher-field');
+
+        toggleInput.addEventListener('change', function() {
+            if(this.checked) {
+                toggleDot.style.transform = 'translateX(100%)';
+                toggleDot.style.backgroundColor = '#121212'; 
+                pubFields.forEach(el => { el.style.opacity = '1'; el.style.pointerEvents = 'auto'; });
+            } else {
+                toggleDot.style.transform = 'translateX(0)';
+                toggleDot.style.backgroundColor = '#121212';
+                pubFields.forEach(el => { el.style.opacity = '0.3'; el.style.pointerEvents = 'none'; });
             }
+        });
+        
+        if(toggleInput.checked) { toggleDot.style.transform = 'translateX(100%)'; }
 
-            init() {
-                this.resize();
-                window.addEventListener('resize', () => this.resize());
-                window.addEventListener('mousemove', (e) => {
-                    this.cursor.x = e.clientX;
-                    this.cursor.y = e.clientY;
-                });
-                this.animate();
-            }
-
-            resize() {
-                this.width = window.innerWidth;
-                this.height = window.innerHeight;
-                this.canvas.width = this.width;
-                this.canvas.height = this.height;
-            }
-
-            animate() {
-                // Clear canvas with a fade effect (optional, but standard for trails)
-                // Since we want a clean trail, we clear fully each frame and redraw history
-                this.ctx.clearRect(0, 0, this.width, this.height);
-
-                // Add current point to history
-                // Use basic inertia (lerp) for the "head" of the trail to smooth input
-                // For simpler logic, we just push the raw mouse pos or a slightly lagged one
-                // Let's implement the inertia prop: 0.5
-                
-                // We need a "rendered cursor" separate from "actual mouse"
-                if (!this.renderedCursor) this.renderedCursor = { ...this.cursor };
-                
-                const inertia = 0.5;
-                this.renderedCursor.x += (this.cursor.x - this.renderedCursor.x) * inertia;
-                this.renderedCursor.y += (this.cursor.y - this.renderedCursor.y) * inertia;
-
-                this.points.push({ 
-                    x: this.renderedCursor.x, 
-                    y: this.renderedCursor.y, 
-                    age: 0 
-                });
-
-                // Trim history
-                if (this.points.length > this.trailLength) {
-                    this.points.shift();
-                }
-
-                // Draw Trail
-                this.ctx.beginPath();
-                // Styling based on props: Bloom, etc.
-                this.ctx.lineJoin = 'round';
-                this.ctx.lineCap = 'round';
-                
-                // Bloom effect via shadow
-                this.ctx.shadowBlur = 15; // approximation of bloomRadius
-                this.ctx.shadowColor = this.color;
-
-                for (let i = 0; i < this.points.length - 1; i++) {
-                    const p1 = this.points[i];
-                    const p2 = this.points[i+1];
-                    
-                    this.ctx.beginPath();
-                    this.ctx.moveTo(p1.x, p1.y);
-                    this.ctx.lineTo(p2.x, p2.y);
-                    
-                    // Opacity based on age/index
-                    const opacity = i / this.points.length;
-                    this.ctx.strokeStyle = `rgba(177, 158, 239, ${opacity})`; // Converted hex #B19EEF to RGB
-                    this.ctx.lineWidth = opacity * 8; // Tapering size
-                    
-                    this.ctx.stroke();
-                }
-
-                requestAnimationFrame(() => this.animate());
-            }
+        function formatMoney(x) {
+            if (isNaN(x)) return "$0";
+            return "$" + x.toLocaleString(undefined, {maximumFractionDigits: 0});
+        }
+        function formatPercent(x) {
+            if (isNaN(x)) return "0%";
+            return x.toFixed(1) + "%";
+        }
+        function formatMultiple(x) {
+            if (!isFinite(x) || isNaN(x)) return "0x";
+            return x.toFixed(2) + "x";
         }
 
-        // Initialize Ghost Cursor on Load
-        window.onload = () => {
-            new GhostCursor();
-        };
+        document.getElementById("calc-button").addEventListener("click", function () {
+            const investment = parseFloat(document.getElementById("investment").value) || 0;
+            let investorPoolTotal = parseFloat(document.getElementById("investorPool").value) || 0;
+            const units = parseFloat(document.getElementById("units").value) || 0;
+            const price = parseFloat(document.getElementById("price").value) || 0;
+            const platformFee = parseFloat(document.getElementById("platformFee").value) || 0;
+            const usePublisher = document.getElementById("usePublisher").checked;
+            const pubRecoup = parseFloat(document.getElementById("pubRecoup").value) || 0;
+            const pubShare = parseFloat(document.getElementById("pubShare").value) || 0;
 
-        // Simple flicker effect for the title (Existing logic)
-        const title = document.querySelector('h1');
-        setInterval(() => {
-            if(Math.random() > 0.95) {
-                title.style.opacity = 0.5;
-                setTimeout(() => title.style.opacity = 1, 50);
+            const gross = units * price;
+            const afterPlatform = gross * (1 - platformFee / 100);
+
+            let devRevenue = 0;
+
+            if (usePublisher) {
+                if (afterPlatform <= pubRecoup) {
+                    devRevenue = 0;
+                } else {
+                    const postRecoup = afterPlatform - pubRecoup;
+                    const devSharePercent = 100 - pubShare;
+                    devRevenue = postRecoup * (devSharePercent / 100);
+                }
+            } else {
+                devRevenue = afterPlatform;
             }
-        }, 1000);
+
+            const investorPoolAmount = devRevenue * 0.8;
+            if (investorPoolTotal <= 0) { investorPoolTotal = investment; }
+
+            const investorShareRatio = Math.min(1, investment / investorPoolTotal);
+            const investorPayout = investorPoolAmount * investorShareRatio;
+            const multiple = investment > 0 ? investorPayout / investment : 0;
+
+            document.getElementById("res-gross").textContent = formatMoney(gross);
+            document.getElementById("res-after-platform").textContent = formatMoney(afterPlatform);
+            document.getElementById("res-dev").textContent = formatMoney(devRevenue);
+            document.getElementById("res-pool").textContent = formatMoney(investorPoolAmount);
+            document.getElementById("res-share").textContent = formatPercent(investorShareRatio * 100);
+            document.getElementById("res-payout").textContent = formatMoney(investorPayout);
+            document.getElementById("res-multiple").textContent = formatMultiple(multiple);
+
+            const resultsDiv = document.getElementById('calc-results');
+            resultsDiv.style.opacity = '1';
+            resultsDiv.style.filter = 'none';
+        });
     </script>
 </body>
 </html>

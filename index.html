@@ -1,684 +1,464 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RareBird Games | Investor Return Model</title>
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
-    <!-- Fonts matching the Logo Aesthetic -->
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <title>Sinfeld: Evil Resident - Pitch Deck</title>
     
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        bird: {
-                            red: '#EF5B42',    /* From Logo Sky */
-                            gold: '#EBC466',   /* From Logo Sand */
-                            black: '#121212',  /* Warm Black */
-                            paper: '#F3F2EA',  /* Off White */
-                            gray: '#2A2A2A'
-                        }
-                    },
-                    fontFamily: {
-                        display: ['Anton', 'sans-serif'],
-                        mono: ['Space Mono', 'monospace'],
-                    }
-                }
-            }
-        }
-    </script>
+    <!-- Reveal.js CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/black.min.css" id="theme">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Roboto+Condensed:wght@400;700&family=VT323&display=swap" rel="stylesheet">
 
     <style>
-        body {
-            font-family: 'Space Mono', monospace;
-            background-color: #121212;
-            color: #F3F2EA;
-            overflow-x: hidden;
+        /* --- CUSTOM SINFELD AESTHETIC --- */
+        :root {
+            --neon-purple: #b026ff;
+            --neon-green: #39ff14;
+            --blood-red: #ff0000;
+            --tv-static-bg: #111;
+            --text-main: #f0f0f0;
         }
 
-        /* Vintage Paper Texture Overlay */
-        .paper-overlay {
-            position: fixed;
+        body {
+            background-color: var(--tv-static-bg);
+            font-family: 'Roboto Condensed', sans-serif;
+        }
+
+        .reveal {
+            color: var(--text-main);
+        }
+
+        /* Scanline effect overlay */
+        .reveal::before {
+            content: " ";
+            display: block;
+            position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 2px, 3px 100%;
             pointer-events: none;
-            z-index: 50;
-            opacity: 0.08;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-            mix-blend-mode: overlay;
         }
 
-        /* Hard Edges & Borders (Logo Style) */
-        .retro-card {
-            background: #181818;
-            border: 2px solid #2A2A2A;
-            transition: all 0.2s ease;
-        }
-        .retro-card:hover {
-            border-color: #EF5B42;
-            transform: translate(-2px, -2px);
-            box-shadow: 4px 4px 0px #EF5B42;
-        }
-
-        .btn-primary {
-            background-color: #EF5B42;
-            color: #121212;
-            border: 2px solid #EF5B42;
+        /* Typography */
+        .reveal h1, .reveal h2, .reveal h3 {
+            font-family: 'Creepster', cursive;
             text-transform: uppercase;
-            font-weight: 700;
-            letter-spacing: 1px;
-            transition: all 0.2s;
-        }
-        .btn-primary:hover {
-            background-color: transparent;
-            color: #EF5B42;
-            box-shadow: 4px 4px 0px #EBC466;
-            transform: translate(-2px, -2px);
+            text-shadow: 3px 3px 0px #000, -1px -1px 0 var(--neon-purple);
+            letter-spacing: 2px;
         }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 12px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #121212;
-            border-left: 1px solid #333;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #333;
-            border: 2px solid #121212;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #EF5B42;
+        .reveal h1 { color: var(--neon-purple); font-size: 3.5em; }
+        .reveal h2 { color: var(--text-main); }
+        .reveal h3 { color: var(--neon-green); }
+
+        .reveal p, .reveal li {
+            font-family: 'VT323', monospace;
+            font-size: 1.3em;
+            line-height: 1.4;
         }
 
-        .display-text {
-            font-family: 'Anton', sans-serif;
+        /* Helper Classes */
+        .highlight-green { color: var(--neon-green); font-weight: bold; }
+        .highlight-purple { color: var(--neon-purple); font-weight: bold; }
+        .highlight-red { color: var(--blood-red); font-weight: bold; }
+        
+        .box {
+            background: rgba(255,255,255,0.05);
+            border: 2px solid var(--neon-purple);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 10px 0;
+            backdrop-filter: blur(5px);
+        }
+
+        .split-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .split-col {
+            flex: 1;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(0,0,0,0.5);
+        }
+
+        /* Character Profile Styles */
+        .char-profile {
+            display: flex;
+            align-items: center;
+            background: rgba(0,0,0,0.6);
+            border: 1px solid #333;
+            margin-bottom: 15px;
+            padding: 10px;
+            text-align: left;
+        }
+        .char-img {
+            width: 80px;
+            height: 80px;
+            background: #222;
+            border-radius: 50%;
+            margin-right: 15px;
+            border: 2px solid var(--neon-green);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7em;
+            color: #555;
+        }
+        .char-info h4 { margin: 0; color: var(--neon-purple); font-family: 'Roboto Condensed', sans-serif; text-transform: uppercase;}
+        .char-info p { margin: 0; font-size: 0.8em; opacity: 0.9; }
+
+        /* Diagram Styles */
+        .flow-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .flow-box {
+            background: #222;
+            border: 2px solid var(--neon-green);
+            padding: 15px 25px;
+            border-radius: 4px;
+            font-family: 'VT323', monospace;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            position: relative;
+        }
+        .flow-arrow {
+            color: var(--neon-purple);
+            font-size: 2em;
         }
 
-        /* Animation */
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Budget Table */
+        .budget-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 15px 0;
         }
-        .animate-up {
-            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        .budget-col {
+            padding: 30px;
+            border-radius: 10px;
+            vertical-align: top;
+            width: 50%;
+        }
+        .budget-lean {
+            border: 2px solid var(--neon-green);
+            background: rgba(57, 255, 20, 0.05);
+        }
+        .budget-ideal {
+            border: 2px solid gold;
+            background: rgba(255, 215, 0, 0.05);
+        }
+        .price-tag {
+            font-size: 2em;
+            font-weight: bold;
+            display: block;
+            margin: 20px 0;
+        }
+
+        /* Image Placeholders */
+        .img-placeholder {
+            width: 100%;
+            height: 250px;
+            background: #1a1a1a;
+            border: 1px dashed #555;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #777;
+            font-family: monospace;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .img-placeholder::after {
+            content: "IMAGE ASSET";
+            position: absolute;
+            opacity: 0.3;
+            transform: rotate(-15deg);
+            font-size: 2em;
+        }
+
+        /* Button */
+        .cta-button {
+            display: inline-block;
+            background: var(--neon-purple);
+            color: white !important;
+            padding: 20px 40px;
+            font-size: 1.5em;
+            text-decoration: none !important;
+            font-family: 'Creepster', cursive;
+            border-radius: 5px;
+            margin-top: 30px;
+            transition: transform 0.2s;
+            border: 2px solid white;
+        }
+        .cta-button:hover {
+            transform: scale(1.05);
+            background: #800080;
+            box-shadow: 0 0 20px var(--neon-purple);
         }
     </style>
 </head>
-<body class="antialiased selection:bg-bird-gold selection:text-bird-black">
+<body>
 
-    <div class="paper-overlay"></div>
+    <div class="reveal">
+        <div class="slides">
 
-    <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-40 border-b-2 border-bird-gray bg-bird-black/95 backdrop-blur-sm">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <img src="android-chrome-192x192.png" alt="RareBird Games Logo" class="w-10 h-10 border-2 border-bird-paper object-cover">
-                <span class="font-display text-2xl tracking-wide text-bird-paper">RAREBIRD<span class="text-bird-red">GAMES</span></span>
-            </div>
-            <a href="#investor-calculator" class="hidden md:block px-6 py-2 text-xs font-bold uppercase tracking-widest border-2 border-bird-paper hover:bg-bird-paper hover:text-bird-black transition-all">
-                Calculator_v1.0
-            </a>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <header class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden bg-bird-black">
-        <!-- Background Asset: Hallway Poster with Tint -->
-        <div class="absolute inset-0 z-0">
-            <img src="16_9_Horizontal_Logo_Placement_2.jpg" alt="Sinfeld Evil Resident Background" class="w-full h-full object-cover opacity-20 grayscale brightness-75 contrast-125">
-            <div class="absolute inset-0 bg-gradient-to-t from-bird-black via-transparent to-transparent"></div>
-            <!-- Halftone pattern effect overlay -->
-            <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#333 1px, transparent 1px); background-size: 4px 4px;"></div>
-        </div>
-
-        <div class="relative z-10 max-w-5xl mx-auto px-6 text-center border-x-0 md:border-x border-dashed border-bird-gray py-12">
-            <!-- Sinfeld Logo Asset -->
-            <div class="flex justify-center mb-8 animate-up">
-                <img src="SinfeldLogo_v1.jpg" alt="Sinfeld: Evil Resident Logo" class="h-24 md:h-32 object-contain drop-shadow-2xl grayscale hover:grayscale-0 transition-all duration-500 cursor-help">
-            </div>
-            
-            <div class="inline-block border border-bird-gold text-bird-gold px-3 py-1 text-xs font-bold uppercase mb-6 tracking-widest bg-bird-gold/10">
-                // Internal Memo: Investor Briefing
-            </div>
-
-            <h1 class="font-display text-6xl md:text-8xl text-bird-paper mb-6 leading-[0.9] animate-up" style="animation-delay: 0.1s;">
-                REVENUE <span class="text-bird-red">ARCHITECTURE</span>
-            </h1>
-            
-            <p class="text-lg md:text-xl text-stone-400 max-w-2xl mx-auto mb-10 leading-relaxed font-mono animate-up" style="animation-delay: 0.2s;">
-                A transparent breakdown of how RareBird Games prioritizes investor repayment through flexible publishing pathways.
-            </p>
-
-            <div class="flex flex-col sm:flex-row gap-6 justify-center animate-up" style="animation-delay: 0.3s;">
-                <a href="#revenue-model" class="btn-primary px-8 py-4">
-                    Explore Model
-                </a>
-                <a href="#investor-calculator" class="px-8 py-4 text-bird-paper font-bold uppercase tracking-widest border-2 border-bird-gray hover:border-bird-gold hover:text-bird-gold transition-colors">
-                    Run Scenarios
-                </a>
-            </div>
-        </div>
-    </header>
-
-    <!-- The Dual Path Section -->
-    <section id="revenue-model" class="py-24 relative border-t-2 border-bird-gray bg-[#161616]">
-        <div class="max-w-6xl mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="font-display text-4xl md:text-5xl mb-4 text-bird-paper">ADAPTIVE REVENUE PATHS</h2>
-                <div class="w-24 h-2 bg-bird-red mx-auto mb-6"></div>
-                <p class="text-stone-400 max-w-2xl mx-auto">
-                    [SYSTEM_NOTE]: We haven't signed a publisher yet. Our repayment model adapts to secure your return regardless of the distribution method.
-                </p>
-            </div>
-
-            <!-- Toggle Switch (Retro Style) -->
-            <div class="flex justify-center mb-12">
-                <div class="border-2 border-bird-gray p-1 inline-flex bg-bird-black">
-                    <button onclick="switchPath('publisher')" id="btn-pub" class="px-6 py-3 text-sm font-bold uppercase transition-all bg-bird-paper text-bird-black border border-bird-paper">
-                        PATH A: PUBLISHER
-                    </button>
-                    <button onclick="switchPath('self')" id="btn-self" class="px-6 py-3 text-sm font-bold uppercase transition-all text-stone-500 hover:text-bird-paper border border-transparent">
-                        PATH B: SELF-PUBLISH
-                    </button>
+            <!-- SLIDE 1: Title & Atmosphere -->
+            <section data-background-gradient="linear-gradient(to bottom, #1a0526, #000000)">
+                <h1 style="font-size: 4em; margin-bottom: 0;">SINFELD</h1>
+                <h2 class="fragment fade-in" style="font-size: 1.8em; color: var(--blood-red);">Evil Resident</h2>
+                <div class="box" style="margin-top: 50px;">
+                    <p>A Surreal Horror-Comedy About the Death of Nostalgia</p>
+                    <p class="highlight-green" style="font-size: 0.9em;">"Silent Hill 4 meets No More Heroes inside a collapsing 90s sitcom."</p>
                 </div>
-            </div>
+            </section>
 
-            <!-- Content Container -->
-            <div class="grid md:grid-cols-12 gap-10 items-start">
-                <!-- Visual Flowchart (Left) -->
-                <div class="md:col-span-7 border-2 border-bird-gray bg-bird-black p-8 relative min-h-[400px]">
-                    <div class="absolute top-0 left-0 bg-bird-gray text-xs px-2 py-1 text-bird-paper font-bold">FIG 1.1</div>
-                    
-                    <!-- Publisher Flow -->
-                    <div id="flow-publisher" class="space-y-6 transition-all duration-500">
-                        <div class="flex items-center p-4 border border-stone-800 bg-stone-900/50">
-                            <div class="w-12 h-12 border-2 border-stone-600 flex items-center justify-center mr-4 text-sm font-bold text-stone-400">01</div>
-                            <div>
-                                <h4 class="font-bold text-stone-300 uppercase">Platform Fees</h4>
-                                <p class="text-xs text-stone-500 font-mono">Standard ~30% fee deducted.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="flex justify-center"><div class="h-8 w-px bg-stone-700"></div></div>
-                        
-                        <div class="flex items-center p-4 border border-bird-gold bg-bird-gold/10">
-                            <div class="w-12 h-12 border-2 border-bird-gold flex items-center justify-center mr-4 text-sm font-bold text-bird-gold">02</div>
-                            <div>
-                                <h4 class="font-bold text-bird-gold uppercase">Publisher Recoup</h4>
-                                <p class="text-xs text-bird-gold/70 font-mono">Pub gets 100% until costs repaid.</p>
-                            </div>
-                        </div>
-
-                        <div class="flex justify-center"><div class="h-8 w-px bg-stone-700"></div></div>
-
-                        <div class="flex items-center p-4 border-2 border-bird-red bg-bird-red/10 shadow-[4px_4px_0px_#EF5B42]">
-                            <div class="w-12 h-12 bg-bird-red text-bird-black flex items-center justify-center mr-4 text-sm font-bold">03</div>
-                            <div>
-                                <h4 class="font-bold text-bird-red uppercase">Revenue Split + Repayment</h4>
-                                <p class="text-xs text-bird-red/80 font-mono">RareBird pays investors from share.</p>
-                            </div>
-                        </div>
+            <!-- SLIDE 2: The "Clout" (Social Proof) -->
+            <section>
+                <h3>The Internet is Watching</h3>
+                <div class="split-container">
+                    <div class="split-col" style="border-color: var(--neon-green);">
+                        <div style="font-size: 5em; line-height: 1; color: var(--neon-green);" class="r-fit-text">10M+</div>
+                        <p>Organic Views</p>
+                        <small style="opacity: 0.7;">Across YouTube, Twitter & TikTok<br>Zero Marketing Spend</small>
                     </div>
-
-                    <!-- Self-Publish Flow (Hidden by default) -->
-                    <div id="flow-self" class="space-y-6 transition-all duration-500 hidden">
-                        <div class="flex items-center p-4 border border-stone-800 bg-stone-900/50">
-                            <div class="w-12 h-12 border-2 border-stone-600 flex items-center justify-center mr-4 text-sm font-bold text-stone-400">01</div>
-                            <div>
-                                <h4 class="font-bold text-stone-300 uppercase">Platform Fees</h4>
-                                <p class="text-xs text-stone-500 font-mono">Standard ~30% fee deducted.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="flex justify-center"><div class="h-8 w-px bg-stone-700"></div></div>
-
-                        <!-- Skipping Recoup -->
-                        <div class="p-3 text-center border border-dashed border-stone-600 opacity-50">
-                            <span class="text-xs uppercase tracking-widest font-bold text-stone-500">// RECOUP PHASE BYPASSED //</span>
-                        </div>
-                        
-                        <div class="flex justify-center"><div class="h-8 w-px bg-stone-700"></div></div>
-
-                        <div class="flex items-center p-4 border-2 border-bird-red bg-bird-red/10 shadow-[4px_4px_0px_#EF5B42]">
-                            <div class="w-12 h-12 bg-bird-red text-bird-black flex items-center justify-center mr-4 text-sm font-bold">02</div>
-                            <div>
-                                <h4 class="font-bold text-bird-red uppercase">Immediate Repayment</h4>
-                                <p class="text-xs text-bird-red/80 font-mono">100% of Net Rev to Studio -> Investors.</p>
-                            </div>
-                        </div>
+                    <div class="split-col">
+                        <ul style="list-style: none; padding: 0; font-size: 0.8em;">
+                            <li style="margin-bottom: 15px;">"The show about nothing... has a game about everything." <br><span class="highlight-purple">- Esquire</span></li>
+                            <li style="margin-bottom: 15px;">"I never knew I needed this." <br><span class="highlight-purple">- IGN</span></li>
+                            <li>"A cult following demanding the full release." <br><span class="highlight-purple">- Polygon</span></li>
+                        </ul>
                     </div>
                 </div>
-
-                <!-- Text Description (Right) -->
-                <div class="md:col-span-5 space-y-6 pt-4">
-                    <div id="text-publisher" class="animate-up">
-                        <h3 class="font-display text-3xl text-bird-paper">THE PUBLISHER PATH</h3>
-                        <p class="text-stone-400 leading-relaxed text-sm">
-                            Publisher handles marketing/distribution costs. They typically take 100% of revenue until those costs are repaid.
-                        </p>
-                        <div class="border-l-2 border-bird-gold pl-4 space-y-2 mt-4">
-                            <p class="text-xs text-bird-gold font-bold uppercase">Pro:</p>
-                            <p class="text-xs text-stone-500">Lower risk due to marketing support.</p>
-                            <p class="text-xs text-bird-gold font-bold uppercase mt-2">Con:</p>
-                            <p class="text-xs text-stone-500">Payment delayed until recoup finishes.</p>
-                        </div>
-                    </div>
-
-                    <div id="text-self" class="hidden animate-up">
-                        <h3 class="font-display text-3xl text-bird-paper">THE SELF-PUBLISH PATH</h3>
-                        <p class="text-stone-400 leading-relaxed text-sm">
-                            We market the game ourselves. This removes the "middle man", accelerating the timeline for investor ROI.
-                        </p>
-                        <div class="border-l-2 border-bird-red pl-4 space-y-2 mt-4">
-                            <p class="text-xs text-bird-red font-bold uppercase">Pro:</p>
-                            <p class="text-xs text-stone-500">Revenue flows immediately after launch.</p>
-                            <p class="text-xs text-bird-red font-bold uppercase mt-2">Pro:</p>
-                            <p class="text-xs text-stone-500">Higher revenue per unit sold.</p>
-                        </div>
-                    </div>
+                <div style="margin-top: 20px; font-size: 0.7em; opacity: 0.6;">
+                    Also featured in: Eurogamer, Kotaku, GamesRadar+
                 </div>
-            </div>
-        </div>
-    </section>
+            </section>
 
-    <!-- Priority Repayment & Convertible Notes -->
-    <section class="py-24 bg-bird-black border-t-2 border-bird-gray relative">
-        <!-- Background grid lines -->
-        <div class="absolute inset-0 opacity-5" style="background-image: linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px); background-size: 40px 40px;"></div>
-        
-        <div class="max-w-7xl mx-auto px-6 relative z-10">
-            <div class="grid lg:grid-cols-2 gap-16">
+            <!-- SLIDE 3: The Pitch (UPDATED TEXT) -->
+            <section>
+                <h3>The Pitch</h3>
+                <div class="box" style="text-align: left;">
+                    <p style="font-size: 1.0em;">
+                        <strong>Sinfeld: Evil Resident</strong> is a surreal horror-comedy inspired by <span class="highlight-green">Silent Hill 4</span>, <span class="highlight-green">No More Heroes</span>, and <span class="highlight-green">Metal Gear Solid</span>.
+                    </p>
+                    <p style="font-size: 1.0em;">
+                        You play as Donathan, an orphan comedian seeking refuge in the abandoned apartment of his comedic idol, Gary Sinfeld. But Gary is asking for your help in resurrecting him and his friends from the <strong>Death Zone</strong>.
+                    </p>
+                </div>
                 
-                <!-- Priority Repayment -->
-                <div>
-                    <h2 class="font-display text-4xl mb-6 flex items-center gap-4">
-                        <span class="w-10 h-10 border-2 border-bird-paper text-bird-paper flex items-center justify-center text-xl">1</span>
-                        PRIORITY REPAYMENT
-                    </h2>
-                    <p class="text-stone-400 mb-8 font-mono text-sm">
-                        Investors are top of the waterfall. We allocate a significant percentage to a Repayment Pool until principal is returned.
-                    </p>
-                    <div class="retro-card p-6">
-                        <h4 class="font-bold text-bird-paper mb-4 uppercase tracking-wider border-b border-stone-700 pb-2">Pro Rata Calculation</h4>
+                <div class="fragment fade-up" style="margin-top: 30px; font-style: italic; color: #aaa; font-size: 0.8em; border-left: 3px solid var(--neon-purple); padding-left: 20px;">
+                    "Inspired by my own experiences in the film and television industry, I wanted to tell a story about how our addiction to IP will lead us to our own downfall."
+                </div>
+            </section>
+
+            <!-- SLIDE 4: The Cast (FOREST W. NARRATIVE SLIDE 1) -->
+            <section>
+                <h3>The Cast</h3>
+                <p style="font-size: 0.7em; opacity: 0.8; margin-bottom: 20px;">WHO AM I? WHO ARE WE SAVING?</p>
+
+                <div class="split-container">
+                    <div class="split-col" style="background: transparent; border: none; padding: 0;">
+                        <!-- Donathan -->
+                        <div class="char-profile">
+                            <div class="char-img">DONATHAN</div>
+                            <div class="char-info">
+                                <h4>The Comedian</h4>
+                                <p>Orphaned. Bald. Desperate for approval. He views the apartment as a sanctuary and Gary as a god.</p>
+                            </div>
+                        </div>
                         
-                        <div class="font-mono text-sm space-y-3">
-                            <div class="flex justify-between">
-                                <span class="text-stone-500">Total Raised:</span>
-                                <span class="text-bird-paper">$409,000</span>
+                        <!-- Gary -->
+                        <div class="char-profile">
+                            <div class="char-img" style="border-color: var(--blood-red);">GARY</div>
+                            <div class="char-info">
+                                <h4>The Idol</h4>
+                                <p>A disembodied voice from the TV. He demands the resurrection of his "Inner Circle" to complete the show.</p>
                             </div>
-                            <div class="flex justify-between">
-                                <span class="text-stone-500">Your Investment:</span>
-                                <span class="text-bird-red">$40,900 (10%)</span>
-                            </div>
-                            <div class="h-px bg-stone-700 my-2"></div>
-                            <div class="flex justify-between bg-bird-gray p-2 border border-stone-600">
-                                <span class="text-bird-gold font-bold">Your Share of Repayments:</span>
-                                <span class="text-bird-gold font-bold">10%</span>
+                        </div>
+                    </div>
+
+                    <div class="split-col" style="background: transparent; border: none; padding: 0;">
+                         <!-- The Friends -->
+                         <div class="char-profile">
+                            <div class="char-img" style="border-color: gold;">FRIENDS</div>
+                            <div class="char-info">
+                                <h4>The Inner Circle</h4>
+                                <p>Larry, Jizlaine, and Wayne. Their souls are trapped in the "Death Zone"—twisted hellscapes built from their own neuroses.</p>
                             </div>
                         </div>
                     </div>
                 </div>
+            </section>
 
-                <!-- Convertible Notes -->
-                <div>
-                    <h2 class="font-display text-4xl mb-6 flex items-center gap-4">
-                        <span class="w-10 h-10 border-2 border-bird-paper text-bird-paper flex items-center justify-center text-xl">2</span>
-                        FUTURE EQUITY
-                    </h2>
-                    <p class="text-stone-400 mb-8 font-mono text-sm">
-                        Investment starts as debt and converts to equity.
-                    </p>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <!-- Card 1 -->
-                        <div class="retro-card p-4 text-center group">
-                            <div class="text-bird-gold mb-2 flex justify-center">
-                                <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            </div>
-                            <h4 class="font-bold text-bird-paper text-sm uppercase">Debt</h4>
-                            <p class="text-[10px] text-stone-500 mt-1">Principal is protected.</p>
-                        </div>
-                        <!-- Card 2 -->
-                        <div class="retro-card p-4 text-center group">
-                            <div class="text-bird-red mb-2 flex justify-center">
-                                <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-                            </div>
-                            <h4 class="font-bold text-bird-paper text-sm uppercase">Trigger</h4>
-                            <p class="text-[10px] text-stone-500 mt-1">Converts on valuation event.</p>
-                        </div>
-                        <!-- Card 3 -->
-                        <div class="retro-card p-4 text-center group">
-                            <div class="text-bird-paper mb-2 flex justify-center">
-                                <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
-                            </div>
-                            <h4 class="font-bold text-bird-paper text-sm uppercase">Equity</h4>
-                            <p class="text-[10px] text-stone-500 mt-1">Ownership in studio.</p>
-                        </div>
+            <!-- SLIDE 5: Big Plot Points (FOREST W. NARRATIVE SLIDE 2) -->
+            <section>
+                <h3>Why Are We Playing?</h3>
+                <div class="split-container">
+                    <div class="split-col">
+                        <h4 class="highlight-purple">The Trap</h4>
+                        <p style="font-size: 0.9em;">Donathan enters the apartment seeking safety, but the door chains itself shut. The only way out is deeper in.</p>
+                    </div>
+                    <div class="split-col">
+                         <h4 class="highlight-green">The Ritual</h4>
+                        <p style="font-size: 0.9em;">Gary commands you to enter the "Death Zone" (Rifts) to retrieve the souls of his friends. Each resurrection unlocks a new room in the apartment.</p>
                     </div>
                 </div>
-            </div>
+                <div class="box fragment" style="margin-top: 20px;">
+                    <h4 class="highlight-red">The Twist</h4>
+                    <p style="font-size: 0.9em;">Resurrecting the cast doesn't save them. It feeds Gary. You aren't the hero of this sitcom—you're the chef preparing the meal for a cosmic narcissist.</p>
+                </div>
+            </section>
+
+            <!-- SLIDE 6: The Gameplay Loop -->
+            <section>
+                <h3>The Gameplay Loop</h3>
+                <div class="flow-container">
+                    <div class="flow-box">
+                        <span style="font-size:2em">📺</span><br>
+                        APARTMENT<br><span style="font-size:0.6em; color:#888;">HUB WORLD</span>
+                    </div>
+                    <div class="flow-arrow">➡</div>
+                    <div class="flow-box" style="border-color: var(--neon-purple);">
+                        <span style="font-size:2em">🌀</span><br>
+                        THE DEATH ZONE<br><span style="font-size:0.6em; color:#888;">RIFTS</span>
+                    </div>
+                    <div class="flow-arrow">➡</div>
+                    <div class="flow-box" style="border-color: var(--blood-red);">
+                        <span style="font-size:2em">🪚</span><br>
+                        COMBAT<br><span style="font-size:0.6em; color:#888;">ACTION</span>
+                    </div>
+                    <div class="flow-arrow">➡</div>
+                    <div class="flow-box" style="border-color: gold;">
+                        <span style="font-size:2em">🎤</span><br>
+                        BOSS<br><span style="font-size:0.6em; color:#888;">COMEDY</span>
+                    </div>
+                </div>
+                <div class="flow-container fragment">
+                    <div class="flow-arrow">⬇</div>
+                </div>
+                <div class="flow-container fragment">
+                    <div class="flow-box" style="border-style: dashed;">
+                        <span style="font-size:2em">✨</span><br>
+                        RESURRECT FRIEND<br><span style="font-size:0.6em; color:#888;">UNLOCKS NEW RIFT</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 7: Aesthetics -->
+            <section>
+                <h3>Situational Comedy Horror</h3>
+                <p style="font-size: 0.9em;">Blending 90s broadcast coziness with grotesque digital decay.</p>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="img-placeholder" style="height: 180px; background: #2a1a3a;">
+                        (Screenshot: Neon Purple Lighting)
+                    </div>
+                    <div class="img-placeholder" style="height: 180px; background: #3a1a1a;">
+                        (Screenshot: Flesh Monster)
+                    </div>
+                    <div class="img-placeholder" style="height: 180px; background: #1a3a2a;">
+                        (Screenshot: CRT Filter UI)
+                    </div>
+                    <div class="img-placeholder" style="height: 180px; background: #111;">
+                        (Screenshot: The Apartment)
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 8: Production & Budget -->
+            <section>
+                <h3>Production Plan</h3>
+                <p style="font-size: 0.8em; opacity: 0.8;">Partnered with <strong>Virtuos</strong> for completion by 2026.</p>
+                
+                <table class="budget-table">
+                    <tr>
+                        <td class="budget-col budget-lean">
+                            <h4 style="color: var(--neon-green); margin:0;">Core Completion</h4>
+                            <span class="price-tag">$290,000</span>
+                            <ul style="font-size: 0.7em; text-align: left;">
+                                <li>Focus: <strong>Design & Animation</strong></li>
+                                <li>Completes the narrative loop</li>
+                                <li>Lean, efficient team</li>
+                                <li>Timeline: Jan 2026 - June 2026</li>
+                                <li class="highlight-green" style="margin-top:10px;">Fits the "Outersloth" Sweet Spot</li>
+                            </ul>
+                        </td>
+                        <td class="budget-col budget-ideal">
+                            <h4 style="color: gold; margin:0;">"No Compromise"</h4>
+                            <span class="price-tag">$546,000</span>
+                            <ul style="font-size: 0.7em; text-align: left;">
+                                <li><strong>+ Tech Art & Engineers</strong></li>
+                                <li><strong>+ Professional Sound Design</strong></li>
+                                <li>Ensures high stability & polish</li>
+                                <li>Maximizes audio-visual "Vibes"</li>
+                                <li class="highlight-purple" style="margin-top:10px;">The Viral Quality Standard</li>
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </section>
+
+            <!-- SLIDE 9: The Team -->
+            <section>
+                <h3>RareBird Games</h3>
+                <p>We hijack pop culture to tell stories about the end of the world.</p>
+                <div class="split-container" style="justify-content: center; gap: 40px;">
+                    <div style="text-align: center;">
+                        <div style="width: 150px; height: 150px; background: #333; border-radius: 50%; border: 3px solid var(--neon-green); margin: 0 auto 10px auto;"></div>
+                        <strong>Austin Stock</strong><br>
+                        <small>Director / CEO</small>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="width: 150px; height: 150px; background: #333; border-radius: 50%; border: 3px solid var(--neon-purple); margin: 0 auto 10px auto;"></div>
+                        <strong>Team Members</strong><br>
+                        <small>Remote Global Team<br>(USA, Brazil, Portugal)</small>
+                    </div>
+                </div>
+                <div class="box" style="margin-top: 30px; font-size: 0.8em;">
+                    Creators of the viral <em>Sinfeld Remastered</em> prototype.
+                </div>
+            </section>
+
+            <!-- SLIDE 10: CTA -->
+            <section data-background-gradient="linear-gradient(to top, #200530, #000000)">
+                <h1>Let's Make Something Weird.</h1>
+                <p>We are ready to finish the show.</p>
+                
+                <a href="#" class="cta-button">Download Build</a>
+                
+                <div style="margin-top: 50px; font-size: 0.8em; color: #aaa;">
+                    <p>Contact: Austin Stock</p>
+                    <p>austins@rarebirdgames.com | www.rarebirdgames.com</p>
+                </div>
+            </section>
+
         </div>
-    </section>
+    </div>
 
-    <!-- Scenarios -->
-    <section class="py-24 relative overflow-hidden bg-[#161616] border-t-2 border-bird-gray">
-        <div class="max-w-7xl mx-auto px-6">
-            <h2 class="font-display text-4xl text-center mb-16 uppercase">Projected Outcomes</h2>
-            
-            <div class="grid md:grid-cols-3 gap-8">
-                <!-- Modest -->
-                <div class="retro-card p-8 bg-bird-black opacity-60 hover:opacity-100">
-                    <div class="text-center border-b border-stone-800 pb-4 mb-4">
-                        <div class="text-xs font-bold uppercase tracking-widest text-stone-500">Conservative</div>
-                        <div class="font-display text-5xl text-stone-300 mt-2">~20k</div>
-                        <div class="text-xs text-stone-500 font-mono">Units Sold</div>
-                    </div>
-                    <ul class="space-y-3 text-xs font-mono text-stone-400">
-                        <li class="flex gap-2"><span>[x]</span> Studio covers costs.</li>
-                        <li class="flex gap-2"><span>[x]</span> Slow repayment.</li>
-                        <li class="flex gap-2"><span>[x]</span> Debt remains.</li>
-                    </ul>
-                </div>
-
-                <!-- Solid -->
-                <div class="retro-card p-8 border-bird-gold/50">
-                    <div class="text-center border-b border-bird-gold/30 pb-4 mb-4">
-                        <div class="text-xs font-bold uppercase tracking-widest text-bird-gold">Target</div>
-                        <div class="font-display text-5xl text-white mt-2">~50k</div>
-                        <div class="text-xs text-stone-500 font-mono">Units Sold</div>
-                    </div>
-                    <ul class="space-y-3 text-xs font-mono text-stone-300">
-                        <li class="flex gap-2"><span class="text-bird-gold">>></span> Rapid repayment.</li>
-                        <li class="flex gap-2"><span class="text-bird-gold">>></span> Financial stability.</li>
-                        <li class="flex gap-2"><span class="text-bird-gold">>></span> Next game funded.</li>
-                    </ul>
-                </div>
-
-                <!-- Strong -->
-                <div class="retro-card p-8 border-bird-red shadow-[0_0_20px_rgba(239,91,66,0.1)]">
-                    <div class="text-center border-b border-bird-red/30 pb-4 mb-4">
-                        <div class="text-xs font-bold uppercase tracking-widest text-bird-red">Breakout</div>
-                        <div class="font-display text-5xl text-white mt-2">100k+</div>
-                        <div class="text-xs text-stone-500 font-mono">Units Sold</div>
-                    </div>
-                    <ul class="space-y-3 text-xs font-mono text-stone-300">
-                        <li class="flex gap-2"><span class="text-bird-red">!!</span> Instant repayment.</li>
-                        <li class="flex gap-2"><span class="text-bird-red">!!</span> Equity spike.</li>
-                        <li class="flex gap-2"><span class="text-bird-red">!!</span> High ROI multiple.</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Calculator Section -->
-    <section id="investor-calculator" class="py-24 bg-bird-black border-t-2 border-bird-gray">
-        <div class="max-w-4xl mx-auto px-6">
-            <div class="border-2 border-bird-gray bg-[#181818]">
-                <!-- Calc Header -->
-                <div class="p-6 border-b-2 border-bird-gray bg-bird-gray flex justify-between items-center">
-                    <div>
-                        <h2 class="font-display text-2xl text-bird-paper">RETURN SIMULATOR</h2>
-                        <p class="text-stone-400 text-xs font-mono uppercase">V1.0 // Interactive Model</p>
-                    </div>
-                    <div class="w-3 h-3 bg-bird-red animate-pulse rounded-full"></div>
-                </div>
-
-                <div class="p-8">
-                    <form id="calc-form" class="space-y-8">
-                        
-                        <!-- Top Row Inputs -->
-                        <div class="grid md:grid-cols-2 gap-6">
-                            <div class="space-y-2">
-                                <label for="investment" class="text-xs font-bold uppercase tracking-wide text-stone-500">Your Investment ($)</label>
-                                <input id="investment" type="number" min="0" step="1000" value="50000" required 
-                                    class="w-full bg-bird-black border-2 border-stone-700 p-3 text-bird-paper focus:border-bird-gold focus:outline-none font-mono">
-                            </div>
-                            <div class="space-y-2">
-                                <label for="investorPool" class="text-xs font-bold uppercase tracking-wide text-stone-500">Total Investor Pool ($)</label>
-                                <input id="investorPool" type="number" min="0" step="1000" value="409000"
-                                    class="w-full bg-bird-black border-2 border-stone-700 p-3 text-bird-paper focus:border-bird-gold focus:outline-none font-mono">
-                            </div>
-                        </div>
-
-                        <!-- Game Vars -->
-                        <div class="grid md:grid-cols-3 gap-6 pt-6 border-t border-dashed border-stone-800">
-                            <div class="space-y-2">
-                                <label for="units" class="text-xs font-bold uppercase tracking-wide text-stone-500">Units Sold</label>
-                                <input id="units" type="number" min="0" step="1000" value="75000" required
-                                    class="w-full bg-bird-black border-2 border-stone-700 p-3 text-bird-paper focus:border-bird-red focus:outline-none font-mono">
-                            </div>
-                            <div class="space-y-2">
-                                <label for="price" class="text-xs font-bold uppercase tracking-wide text-stone-500">Price ($)</label>
-                                <input id="price" type="number" min="0" step="1" value="20" required
-                                    class="w-full bg-bird-black border-2 border-stone-700 p-3 text-bird-paper focus:border-bird-red focus:outline-none font-mono">
-                            </div>
-                            <div class="space-y-2">
-                                <label for="platformFee" class="text-xs font-bold uppercase tracking-wide text-stone-500">Platform Fee (%)</label>
-                                <input id="platformFee" type="number" min="0" max="100" step="1" value="30"
-                                    class="w-full bg-bird-black border-2 border-stone-700 p-3 text-bird-paper focus:border-bird-red focus:outline-none font-mono">
-                            </div>
-                        </div>
-
-                        <!-- Publisher Toggle -->
-                        <div class="bg-stone-900/50 p-4 border border-stone-800">
-                            <label class="flex items-center cursor-pointer mb-4">
-                                <div class="relative">
-                                    <input id="usePublisher" type="checkbox" class="sr-only" checked>
-                                    <div class="block bg-stone-700 w-10 h-6"></div>
-                                    <div class="dot absolute left-1 top-1 bg-bird-paper w-4 h-4 transition text-bird-black flex items-center justify-center text-[8px] font-bold"></div>
-                                </div>
-                                <div class="ml-3 text-sm font-bold uppercase text-stone-300">Enable Publisher Logic</div>
-                            </label>
-
-                            <div class="grid md:grid-cols-2 gap-6 publisher-field transition-all duration-300">
-                                <div class="space-y-2">
-                                    <label for="pubRecoup" class="text-xs font-bold uppercase tracking-wide text-stone-500">Publisher Recoup ($)</label>
-                                    <input id="pubRecoup" type="number" min="0" step="50000" value="300000"
-                                        class="w-full bg-bird-black border border-stone-700 p-2 text-stone-300 font-mono text-sm">
-                                </div>
-                                <div class="space-y-2">
-                                    <label for="pubShare" class="text-xs font-bold uppercase tracking-wide text-stone-500">Pub Share (% post-recoup)</label>
-                                    <input id="pubShare" type="number" min="0" max="100" step="1" value="50"
-                                        class="w-full bg-bird-black border border-stone-700 p-2 text-stone-300 font-mono text-sm">
-                                </div>
-                            </div>
-                        </div>
-
-                        <button type="button" id="calc-button" class="btn-primary w-full py-4 text-lg shadow-[4px_4px_0px_#EBC466]">
-                            RUN CALCULATION
-                        </button>
-                    </form>
-
-                    <!-- Results -->
-                    <div id="calc-results" class="mt-12 pt-8 border-t-2 border-bird-gray opacity-50 grayscale transition-all duration-500">
-                        <div class="grid md:grid-cols-2 gap-8">
-                            <!-- Left: Breakdown -->
-                            <div class="space-y-3 text-xs font-mono">
-                                <div class="flex justify-between text-stone-500">
-                                    <span>Gross Revenue:</span>
-                                    <span id="res-gross" class="text-bird-paper font-bold">$0</span>
-                                </div>
-                                <div class="flex justify-between text-stone-500">
-                                    <span>Net after Platform:</span>
-                                    <span id="res-after-platform" class="text-bird-paper font-bold">$0</span>
-                                </div>
-                                <div class="flex justify-between text-stone-500">
-                                    <span>Studio Revenue Share:</span>
-                                    <span id="res-dev" class="text-bird-gold font-bold">$0</span>
-                                </div>
-                                <div class="h-px bg-stone-700 my-2"></div>
-                                <div class="flex justify-between text-bird-red font-bold">
-                                    <span>Total Investor Pool:</span>
-                                    <span id="res-pool">$0</span>
-                                </div>
-                            </div>
-
-                            <!-- Right: Your Return -->
-                            <div class="bg-bird-black p-6 border-2 border-bird-gold relative overflow-hidden">
-                                <div class="absolute -right-4 -top-4 w-16 h-16 bg-bird-gold/20 rounded-full blur-xl"></div>
-                                <div class="text-bird-gold text-xs font-bold uppercase tracking-wide mb-1">Estimated Payout</div>
-                                <div id="res-payout" class="text-4xl font-display text-bird-paper mb-4">$0</div>
-                                
-                                <div class="flex items-center gap-6 font-mono text-xs">
-                                    <div>
-                                        <div class="text-stone-500">Multiple</div>
-                                        <div id="res-multiple" class="text-lg font-bold text-bird-red">0.00x</div>
-                                    </div>
-                                    <div class="h-8 w-px bg-stone-700"></div>
-                                    <div>
-                                        <div class="text-stone-500">Equity Share</div>
-                                        <div id="res-share" class="text-lg font-bold text-stone-300">0%</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer CTA -->
-    <footer class="py-24 bg-bird-black border-t-2 border-bird-gray text-center">
-        <div class="max-w-2xl mx-auto px-6">
-            <h2 class="font-display text-5xl text-bird-paper mb-6">READY TO INVEST?</h2>
-            <p class="text-stone-400 mb-10 text-lg font-mono">
-                Join us in building the next cult classic.
-            </p>
-            <button class="btn-primary px-12 py-5 text-xl">
-                Contact Austin
-            </button>
-            <div class="mt-12 text-stone-600 text-xs font-mono uppercase tracking-widest">
-                &copy; 2024 RareBird Games.
-            </div>
-        </div>
-    </footer>
-
-    <!-- Scripts -->
+    <!-- Reveal.js Script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
     <script>
-        /* --- Logic for Revenue Path Toggle --- */
-        function switchPath(path) {
-            const btnPub = document.getElementById('btn-pub');
-            const btnSelf = document.getElementById('btn-self');
-            const flowPub = document.getElementById('flow-publisher');
-            const flowSelf = document.getElementById('flow-self');
-            const textPub = document.getElementById('text-publisher');
-            const textSelf = document.getElementById('text-self');
-
-            const activeClass = ['bg-bird-paper', 'text-bird-black', 'border-bird-paper'];
-            const inactiveClass = ['text-stone-500', 'hover:text-bird-paper', 'border-transparent'];
-
-            if(path === 'publisher') {
-                btnPub.classList.remove(...inactiveClass);
-                btnPub.classList.add(...activeClass);
-                btnSelf.classList.remove(...activeClass);
-                btnSelf.classList.add(...inactiveClass);
-
-                flowPub.classList.remove('hidden');
-                flowSelf.classList.add('hidden');
-                textPub.classList.remove('hidden');
-                textSelf.classList.add('hidden');
-            } else {
-                btnSelf.classList.remove(...inactiveClass);
-                btnSelf.classList.add(...activeClass);
-                btnPub.classList.remove(...activeClass);
-                btnPub.classList.add(...inactiveClass);
-
-                flowSelf.classList.remove('hidden');
-                flowPub.classList.add('hidden');
-                textSelf.classList.remove('hidden');
-                textPub.classList.add('hidden');
-            }
-        }
-
-        /* --- Logic for Calculator --- */
-        const toggleInput = document.getElementById('usePublisher');
-        const toggleDot = document.querySelector('.dot');
-        const pubFields = document.querySelectorAll('.publisher-field');
-
-        toggleInput.addEventListener('change', function() {
-            if(this.checked) {
-                toggleDot.style.transform = 'translateX(100%)';
-                toggleDot.style.backgroundColor = '#121212'; 
-                pubFields.forEach(el => { el.style.opacity = '1'; el.style.pointerEvents = 'auto'; });
-            } else {
-                toggleDot.style.transform = 'translateX(0)';
-                toggleDot.style.backgroundColor = '#121212';
-                pubFields.forEach(el => { el.style.opacity = '0.3'; el.style.pointerEvents = 'none'; });
-            }
-        });
-        
-        if(toggleInput.checked) { toggleDot.style.transform = 'translateX(100%)'; }
-
-        function formatMoney(x) {
-            if (isNaN(x)) return "$0";
-            return "$" + x.toLocaleString(undefined, {maximumFractionDigits: 0});
-        }
-        function formatPercent(x) {
-            if (isNaN(x)) return "0%";
-            return x.toFixed(1) + "%";
-        }
-        function formatMultiple(x) {
-            if (!isFinite(x) || isNaN(x)) return "0x";
-            return x.toFixed(2) + "x";
-        }
-
-        document.getElementById("calc-button").addEventListener("click", function () {
-            const investment = parseFloat(document.getElementById("investment").value) || 0;
-            let investorPoolTotal = parseFloat(document.getElementById("investorPool").value) || 0;
-            const units = parseFloat(document.getElementById("units").value) || 0;
-            const price = parseFloat(document.getElementById("price").value) || 0;
-            const platformFee = parseFloat(document.getElementById("platformFee").value) || 0;
-            const usePublisher = document.getElementById("usePublisher").checked;
-            const pubRecoup = parseFloat(document.getElementById("pubRecoup").value) || 0;
-            const pubShare = parseFloat(document.getElementById("pubShare").value) || 0;
-
-            const gross = units * price;
-            const afterPlatform = gross * (1 - platformFee / 100);
-
-            let devRevenue = 0;
-
-            if (usePublisher) {
-                if (afterPlatform <= pubRecoup) {
-                    devRevenue = 0;
-                } else {
-                    const postRecoup = afterPlatform - pubRecoup;
-                    const devSharePercent = 100 - pubShare;
-                    devRevenue = postRecoup * (devSharePercent / 100);
-                }
-            } else {
-                devRevenue = afterPlatform;
-            }
-
-            const investorPoolAmount = devRevenue * 0.8;
-            if (investorPoolTotal <= 0) { investorPoolTotal = investment; }
-
-            const investorShareRatio = Math.min(1, investment / investorPoolTotal);
-            const investorPayout = investorPoolAmount * investorShareRatio;
-            const multiple = investment > 0 ? investorPayout / investment : 0;
-
-            document.getElementById("res-gross").textContent = formatMoney(gross);
-            document.getElementById("res-after-platform").textContent = formatMoney(afterPlatform);
-            document.getElementById("res-dev").textContent = formatMoney(devRevenue);
-            document.getElementById("res-pool").textContent = formatMoney(investorPoolAmount);
-            document.getElementById("res-share").textContent = formatPercent(investorShareRatio * 100);
-            document.getElementById("res-payout").textContent = formatMoney(investorPayout);
-            document.getElementById("res-multiple").textContent = formatMultiple(multiple);
-
-            const resultsDiv = document.getElementById('calc-results');
-            resultsDiv.style.opacity = '1';
-            resultsDiv.style.filter = 'none';
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            center: true,
+            hash: true,
+            transition: 'glitch', // Custom feeling
+            backgroundTransition: 'slide'
         });
     </script>
 </body>

@@ -1,729 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hope Has No Borders</title>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
-    
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Rockwell H2</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container">
+        <a class="brand" href="/">Rockwell H2</a>
+        <nav class="nav">
+          <a href="/admin/">Admin</a>
+        </nav>
+      </div>
+    </header>
 
-    <!-- Global Styles & Animations -->
-    <style>
-        :root {
-            --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            scroll-behavior: smooth;
-            background-color: #ffffff;
-            color: #1a1a1a;
-        }
-        
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Playfair Display', serif;
-        }
-
-        .scrollbar-hide::-webkit-scrollbar {
-            display: none;
-        }
-        .scrollbar-hide {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-        /* Animations */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .animate-in {
-            animation: fadeInUp 0.8s var(--ease-out-expo) forwards;
-            opacity: 0;
-        }
-        
-        .delay-100 { animation-delay: 100ms; }
-        .delay-200 { animation-delay: 200ms; }
-        .delay-300 { animation-delay: 300ms; }
-
-        .text-balance { text-wrap: balance; }
-
-        /* Utility for hiding sections */
-        .hidden-section {
-            display: none;
-        }
-
-        /* Navbar transitions */
-        .nav-scrolled {
-            background-color: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(12px);
-            color: black;
-            padding-top: 1rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid #f5f5f5;
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-        }
-        .nav-transparent {
-            background-color: transparent;
-            padding-top: 1.5rem;
-            padding-bottom: 1.5rem;
-        }
-        /* Home page text logic */
-        .nav-home-top { color: white; }
-        .nav-dark-text { color: black; }
-
-        /* Logo Animation */
-        .logo-border {
-            height: 85%;
-            border-left: 2px solid currentColor;
-            border-right: 2px solid currentColor;
-            border-radius: 20%;
-            width: 3.5rem; /* w-14 roughly */
-            position: relative;
-            transition: transform 0.5s ease-out;
-        }
-        .group:hover .logo-border {
-            transform: scaleX(1.05);
-        }
-    </style>
-</head>
-<body class="selection:bg-orange-100 selection:text-orange-900">
-
-    <!-- Navigation -->
-    <nav id="navbar" class="fixed w-full z-50 transition-all duration-500 ease-out nav-transparent nav-home-top">
-        <div class="container mx-auto px-6 flex justify-between items-center">
-            
-            <!-- Logo -->
-            <div onclick="router('home')" class="cursor-pointer z-50 hover:opacity-80 transition-opacity">
-                <div class="flex items-center tracking-tighter font-bold text-2xl md:text-3xl leading-none transition-colors duration-300">
-                    <span>H</span>
-                    <div class="flex flex-col items-center mx-1 justify-center h-full group" style="height: 2rem;">
-                       <span class="logo-border block border-current"></span>
-                       <div class="absolute flex flex-col items-center justify-center text-[0.45rem] md:text-[0.55rem] font-sans tracking-widest font-semibold leading-tight">
-                          <span>HAS NO</span>
-                          <span>BORDERS</span>
-                       </div>
-                    </div>
-                    <span>PE</span>
-                </div>
-            </div>
-
-            <!-- Desktop Nav -->
-            <div class="hidden lg:flex items-center gap-8 font-medium text-xs tracking-widest">
-                <button onclick="router('about')" class="uppercase hover:text-orange-600 transition-colors nav-link" data-key="nav.about">Who We Are</button>
-                <button onclick="router('programs')" class="uppercase hover:text-orange-600 transition-colors nav-link" data-key="nav.programs">Programs</button>
-                <button onclick="router('resources')" class="uppercase hover:text-orange-600 transition-colors nav-link" data-key="nav.resources">Resources</button>
-                <button onclick="router('volunteer')" class="uppercase hover:text-orange-600 transition-colors nav-link" data-key="nav.volunteer">Volunteer</button>
-                
-                <div id="nav-divider" class="h-4 w-px bg-white/30 transition-colors duration-500"></div>
-
-                <button onclick="toggleLanguage()" id="lang-toggle" class="font-bold uppercase hover:text-orange-600 transition-colors">en</button>
-                
-                <button onclick="router('donate')" class="bg-orange-600 text-white px-6 py-3 rounded-sm font-bold uppercase hover:bg-black transition-colors duration-300 shadow-lg shadow-orange-600/20 hover:shadow-xl" data-key="nav.donate">
-                    Donate
-                </button>
-            </div>
-
-            <!-- Mobile Toggle -->
-            <button class="lg:hidden z-50" onclick="toggleMobileMenu()">
-                <i data-lucide="menu" id="menu-icon"></i>
-            </button>
-        </div>
-
-        <!-- Mobile Menu Overlay -->
-        <div id="mobile-menu" class="fixed inset-0 bg-white text-black z-40 flex flex-col items-center justify-center gap-8 opacity-0 pointer-events-none transition-opacity duration-300">
-             <button onclick="router('about')" class="text-3xl font-serif font-light capitalize hover:text-orange-600" data-key="nav.about">Who We Are</button>
-             <button onclick="router('programs')" class="text-3xl font-serif font-light capitalize hover:text-orange-600" data-key="nav.programs">Programs</button>
-             <button onclick="router('resources')" class="text-3xl font-serif font-light capitalize hover:text-orange-600" data-key="nav.resources">Resources</button>
-             <button onclick="router('volunteer')" class="text-3xl font-serif font-light capitalize hover:text-orange-600" data-key="nav.volunteer">Volunteer</button>
-             <button onclick="router('host')" class="text-3xl font-serif font-light capitalize hover:text-orange-600" data-key="nav.host">Host</button>
-             <button onclick="router('donate')" class="text-3xl font-serif font-light capitalize hover:text-orange-600" data-key="nav.donate">Donate</button>
-             
-             <button onclick="toggleLanguage()" class="mt-8 text-xs font-bold uppercase tracking-widest border-b border-black pb-1">
-                 Switch Language
-             </button>
-        </div>
-    </nav>
-
-    <!-- Main Content Area -->
-    <main id="main-content">
-        
-        <!-- HOME VIEW -->
-        <section id="view-home">
-            <!-- Hero -->
-            <header class="relative min-h-screen flex items-center justify-center overflow-hidden">
-                <div class="absolute inset-0 z-0">
-                    <img src="https://images.unsplash.com/photo-1593113598332-cd288d649433?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Community" class="w-full h-full object-cover grayscale brightness-50 scale-105 animate-in" style="animation-duration: 1.5s;">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
-                </div>
-                
-                <div class="container mx-auto px-6 relative z-10 text-center max-w-5xl mt-20">
-                    <p class="text-orange-500 font-bold tracking-[0.3em] text-xs uppercase mb-6 animate-in delay-100" data-key="hero.est">Est. 2023 • Denver, CO</p>
-                    <h1 class="text-5xl md:text-7xl lg:text-9xl font-serif text-white mb-8 leading-[0.9] tracking-tight animate-in delay-200">
-                        HOPE<br/>HAS NO<br/>BORDERS
-                    </h1>
-                    <p class="text-lg md:text-2xl text-neutral-200 font-light mb-12 max-w-2xl mx-auto leading-relaxed text-balance animate-in delay-300" data-key="hero.subtitle">
-                        A grassroots response to the humanitarian crisis in Denver...
-                    </p>
-                    <div class="flex flex-col sm:flex-row gap-6 justify-center animate-in delay-300">
-                        <button onclick="router('resources')" class="bg-white text-black px-10 py-4 rounded-sm text-xs font-bold uppercase tracking-widest hover:bg-orange-600 hover:text-white transition-all duration-300" data-key="hero.cta_primary">Find Resources</button>
-                        <button onclick="router('about')" class="border border-white/30 backdrop-blur-sm text-white px-10 py-4 rounded-sm text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all duration-300" data-key="hero.cta_secondary">Our Impact</button>
-                    </div>
-                </div>
-            </header>
-
-            <!-- Mission -->
-            <section class="py-32 bg-white">
-                <div class="container mx-auto px-6 max-w-4xl text-center">
-                    <div class="mx-auto mb-10 w-6 text-orange-600 animate-pulse"><i data-lucide="heart"></i></div>
-                    <h2 class="text-3xl md:text-5xl font-serif leading-snug text-neutral-900 mb-10 text-balance" data-key="mission.statement">
-                        "To provide humanitarian aid..."
-                    </h2>
-                    <p class="text-neutral-500 text-lg font-light max-w-2xl mx-auto" data-key="mission.sub">
-                        We are moms, neighbors, and community members...
-                    </p>
-                </div>
-            </section>
-
-            <!-- Cards -->
-            <section class="py-24 bg-neutral-50 border-t border-neutral-200">
-                <div class="container mx-auto px-6">
-                    <div class="grid md:grid-cols-3 gap-8 lg:gap-12">
-                        <!-- Host Card -->
-                        <div onclick="router('host')" class="group cursor-pointer bg-white p-8 border border-transparent hover:border-neutral-200 hover:shadow-xl transition-all duration-500 rounded-sm">
-                            <div class="text-neutral-300 group-hover:text-orange-600 mb-6 transition-colors"><i data-lucide="home" class="w-10 h-10"></i></div>
-                            <h3 class="text-2xl font-serif mb-3" data-key="home_cards.host.title">Host Homes</h3>
-                            <p class="text-neutral-500 leading-relaxed mb-6 font-light" data-key="home_cards.host.desc">Connecting local homeowners...</p>
-                            <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest group-hover:text-orange-600 transition-colors">
-                                <span data-key="home_cards.host.action">Apply to Host</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                            </div>
-                        </div>
-                        <!-- Legal Card -->
-                        <div onclick="router('programs')" class="group cursor-pointer bg-white p-8 border border-transparent hover:border-neutral-200 hover:shadow-xl transition-all duration-500 rounded-sm">
-                             <div class="text-neutral-300 group-hover:text-orange-600 mb-6 transition-colors"><i data-lucide="scale" class="w-10 h-10"></i></div>
-                            <h3 class="text-2xl font-serif mb-3" data-key="home_cards.legal.title">Legal Support</h3>
-                            <p class="text-neutral-500 leading-relaxed mb-6 font-light" data-key="home_cards.legal.desc">Pro se asylum clinics...</p>
-                            <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest group-hover:text-orange-600 transition-colors">
-                                <span data-key="home_cards.legal.action">View Clinics</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                            </div>
-                        </div>
-                        <!-- Crisis Card -->
-                        <div onclick="router('donate')" class="group cursor-pointer bg-white p-8 border border-transparent hover:border-neutral-200 hover:shadow-xl transition-all duration-500 rounded-sm">
-                             <div class="text-neutral-300 group-hover:text-orange-600 mb-6 transition-colors"><i data-lucide="shield-check" class="w-10 h-10"></i></div>
-                            <h3 class="text-2xl font-serif mb-3" data-key="home_cards.crisis.title">Crisis Fund</h3>
-                            <p class="text-neutral-500 leading-relaxed mb-6 font-light" data-key="home_cards.crisis.desc">Emergency financial assistance...</p>
-                            <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest group-hover:text-orange-600 transition-colors">
-                                <span data-key="home_cards.crisis.action">Support Fund</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </section>
-
-        <!-- PROGRAMS VIEW -->
-        <section id="view-programs" class="hidden-section pt-32 pb-24 min-h-screen bg-white animate-in">
-            <div class="container mx-auto px-6">
-                <div class="max-w-3xl mb-24">
-                    <span class="text-orange-600 font-bold tracking-widest text-xs uppercase mb-4 block" data-key="programs_page.label">Our Work</span>
-                    <h1 class="text-5xl md:text-7xl font-serif mb-8 leading-tight" data-key="programs_page.title">Bridging the Gap</h1>
-                    <p class="text-xl text-neutral-600 font-light leading-relaxed" data-key="programs_page.subtitle">
-                        We focus on three critical pillars...
-                    </p>
-                </div>
-                
-                <div class="space-y-32">
-                    <!-- Dynamic Program Injection -->
-                    <div id="programs-container"></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- VOLUNTEER VIEW -->
-        <section id="view-volunteer" class="hidden-section pt-32 min-h-screen bg-neutral-50 animate-in">
-            <div class="container mx-auto px-6 max-w-5xl">
-                <div class="bg-white p-12 md:p-20 shadow-sm border border-neutral-100 text-center mb-16">
-                    <h1 class="text-5xl md:text-6xl font-serif mb-6" data-key="volunteer_page.title">Volunteer</h1>
-                    <p class="text-xl text-neutral-500 font-light max-w-2xl mx-auto mb-10" data-key="volunteer_page.subtitle">We are volunteer-run...</p>
-                    <button class="bg-orange-600 text-white px-10 py-4 rounded-sm text-xs font-bold uppercase tracking-widest hover:bg-black transition-colors" data-key="volunteer_page.button">Join the Team</button>
-                </div>
-                <!-- Dynamic Volunteer Roles -->
-                <div id="volunteer-roles-container" class="grid md:grid-cols-2 gap-12"></div>
-            </div>
-        </section>
-
-        <!-- RESOURCES VIEW -->
-        <section id="view-resources" class="hidden-section pt-24 min-h-screen bg-white flex flex-col h-screen animate-in">
-            <div class="bg-white border-b border-neutral-100 py-8 px-6 z-20">
-                <div class="container mx-auto flex flex-col md:flex-row justify-between items-end gap-6">
-                   <div>
-                      <h1 class="text-4xl font-serif mb-2" data-key="resources.title">Community Directory</h1>
-                      <p class="text-neutral-500 font-light" data-key="resources.subtitle">Essential services...</p>
-                   </div>
-                   <!-- Filters -->
-                   <div id="resource-filters" class="flex gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 scrollbar-hide">
-                       <!-- JS will populate -->
-                   </div>
-                </div>
-            </div>
-            
-            <div class="flex-1 flex flex-col md:flex-row overflow-hidden relative">
-                <div id="resource-list" class="w-full md:w-1/3 lg:w-1/4 border-r border-neutral-100 overflow-y-auto bg-white z-10">
-                    <!-- JS will populate -->
-                </div>
-                <div class="flex-1 bg-neutral-100 relative h-[50vh] md:h-auto">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d196236.4678822363!2d-105.0210217036495!3d39.76426749298565!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1sfood%20bank%20denver!5e0!3m2!1sen!2sus!4v1697230000000!5m2!1sen!2sus" width="100%" height="100%" style="border:0;" loading="lazy" class="grayscale contrast-125 opacity-90 hover:grayscale-0 hover:opacity-100 transition-all duration-700"></iframe>
-                    <div class="absolute top-6 right-6 bg-white p-6 shadow-xl max-w-xs hidden md:block border-l-4 border-orange-600 animate-in delay-300">
-                        <h4 class="font-serif font-bold text-lg mb-2" data-key="resources.map_badge.title">Live Directory</h4>
-                        <p class="text-xs text-neutral-500 leading-relaxed" data-key="resources.map_badge.desc">Real-time resource tracking...</p>
-                     </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- DONATE VIEW -->
-        <section id="view-donate" class="hidden-section pt-32 min-h-screen bg-white animate-in">
-             <div class="container mx-auto px-6 max-w-5xl">
-                <div class="grid md:grid-cols-2 gap-16 mb-24">
-                    <div>
-                        <span class="text-orange-600 font-bold tracking-widest text-xs uppercase mb-4 block" data-key="donate_page.action">Take Action</span>
-                        <h1 class="text-5xl md:text-6xl font-serif mb-8 leading-tight" data-key="donate_page.title">Donate</h1>
-                        <p class="text-lg text-neutral-600 font-light leading-relaxed mb-8" data-key="donate_page.subtitle">Your contribution...</p>
-                        <button class="bg-orange-600 text-white px-8 py-4 rounded-sm font-bold uppercase tracking-widest hover:bg-black transition-colors shadow-xl shadow-orange-600/20" data-key="donate_page.button_money">Make a Financial Contribution</button>
-                    </div>
-                    <div class="bg-neutral-50 p-12 flex flex-col justify-center items-center text-center border border-neutral-100">
-                        <h3 class="text-2xl font-serif mb-4" data-key="donate_page.corp_title">Corporate Matching</h3>
-                        <p class="text-neutral-500 font-light mb-8" data-key="donate_page.corp_desc">Does your employer match?</p>
-                        <button class="border-b border-black pb-1 uppercase text-xs font-bold tracking-widest hover:text-orange-600 hover:border-orange-600 transition-colors" data-key="donate_page.corp_btn">Check Eligibility</button>
-                    </div>
-                </div>
-                
-                <div class="border-t border-neutral-200 pt-24 pb-24">
-                    <div class="text-center mb-16">
-                        <h2 class="text-4xl font-serif mb-4" data-key="donate_page.items_title">Item Donations</h2>
-                        <p class="text-neutral-500 font-light" data-key="donate_page.items_sub">We accept specific items...</p>
-                    </div>
-                    <div id="donation-items" class="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-16">
-                        <!-- JS populated -->
-                    </div>
-                </div>
-             </div>
-        </section>
-
-        <!-- ABOUT VIEW -->
-        <section id="view-about" class="hidden-section pt-32 min-h-screen bg-white animate-in">
-             <div class="container mx-auto px-6 max-w-4xl text-center mb-24">
-                <h1 class="text-5xl md:text-7xl font-serif mb-8" data-key="about_page.title">Who We Are</h1>
-                <p class="text-xl text-neutral-600 font-light leading-relaxed" data-key="about_page.subtitle">We are not a large institution...</p>
-             </div>
-             <div class="bg-neutral-50 py-24">
-                <div class="container mx-auto px-6 max-w-6xl">
-                    <div id="team-grid" class="grid md:grid-cols-12 gap-12">
-                        <!-- JS populated -->
-                    </div>
-                </div>
-             </div>
-        </section>
-
-        <!-- HOST VIEW -->
-        <section id="view-host" class="hidden-section pt-32 min-h-screen bg-white animate-in">
-             <div class="container mx-auto px-6 max-w-3xl">
-                 <div class="text-center mb-16">
-                     <h1 class="text-5xl font-serif mb-6" data-key="host_page.title">Host Application</h1>
-                     <p class="text-neutral-500" data-key="host_page.step">Step 1 of 3</p>
-                     <div class="w-full bg-neutral-100 h-1 mt-6 rounded-full overflow-hidden">
-                         <div class="bg-orange-600 w-1/3 h-full"></div>
-                     </div>
-                 </div>
-                 
-                 <form class="space-y-8 animate-in delay-100">
-                     <div class="grid md:grid-cols-2 gap-8">
-                         <div class="space-y-2">
-                             <label class="text-xs font-bold uppercase tracking-widest text-neutral-500" data-key="host_page.fname">First Name</label>
-                             <input type="text" class="w-full border-b border-neutral-300 py-3 focus:border-orange-600 outline-none transition-colors bg-transparent" placeholder="Jane">
-                         </div>
-                         <div class="space-y-2">
-                             <label class="text-xs font-bold uppercase tracking-widest text-neutral-500" data-key="host_page.lname">Last Name</label>
-                             <input type="text" class="w-full border-b border-neutral-300 py-3 focus:border-orange-600 outline-none transition-colors bg-transparent" placeholder="Doe">
-                         </div>
-                     </div>
-                     
-                     <div class="space-y-2">
-                        <label class="text-xs font-bold uppercase tracking-widest text-neutral-500" data-key="host_page.accom_label">Accommodation Type</label>
-                        <div id="host-accom-opts" class="grid grid-cols-2 gap-4 mt-2">
-                            <!-- JS Populated -->
-                        </div>
-                     </div>
-
-                     <div class="space-y-2">
-                         <label class="text-xs font-bold uppercase tracking-widest text-neutral-500" data-key="host_page.motivation">Motivation</label>
-                         <textarea class="w-full border border-neutral-300 p-4 h-32 focus:border-orange-600 outline-none transition-colors bg-transparent rounded-sm" id="host-motivation" placeholder="Why do you want to become a host?"></textarea>
-                     </div>
-
-                     <div class="bg-neutral-50 p-6 flex items-start gap-4 text-sm text-neutral-500">
-                         <div class="flex-shrink-0"><i data-lucide="shield-check"></i></div>
-                         <p data-key="host_page.disclaimer">By continuing, you agree...</p>
-                     </div>
-
-                     <button type="button" class="w-full bg-black text-white py-5 rounded-sm text-xs font-bold uppercase tracking-widest hover:bg-orange-600 transition-colors" data-key="host_page.button">Continue</button>
-                 </form>
-             </div>
-        </section>
-
+    <main class="container">
+      <h1 id="page-title">Loading...</h1>
+      <div id="page-body" class="prose"></div>
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-black text-white py-24 border-t border-neutral-900">
-        <div class="container mx-auto px-6 grid md:grid-cols-4 gap-12">
-            <div class="md:col-span-2">
-                <div class="mb-8 font-bold text-2xl tracking-tighter">
-                     HOPE <span class="text-neutral-500 text-sm tracking-widest font-normal uppercase ml-2">Has No Borders</span>
-                </div>
-                <p class="text-neutral-500 max-w-md font-light mb-8">
-                    A 501(c)(3) non-profit organization dedicated to providing humanitarian aid, housing, and legal support to asylum seekers in Denver.
-                </p>
-                <div class="flex gap-4 text-neutral-400">
-                    <a href="#" class="hover:text-white transition-colors">Instagram</a>
-                    <a href="#" class="hover:text-white transition-colors">LinkedIn</a>
-                    <a href="#" class="hover:text-white transition-colors">Facebook</a>
-                </div>
-            </div>
-            <div>
-                 <h4 class="font-serif text-xl mb-6">Navigation</h4>
-                 <ul class="space-y-4 text-neutral-400 font-light text-sm">
-                    <li><button onclick="router('about')" class="hover:text-white transition-colors" data-key="nav.about">Who We Are</button></li>
-                    <li><button onclick="router('programs')" class="hover:text-white transition-colors" data-key="nav.programs">Programs</button></li>
-                    <li><button onclick="router('resources')" class="hover:text-white transition-colors" data-key="nav.resources">Resources</button></li>
-                 </ul>
-            </div>
-            <div>
-                 <h4 class="font-serif text-xl mb-6">Legal & Contact</h4>
-                 <ul class="space-y-4 text-neutral-400 font-light text-sm">
-                    <li>hopehasnoborders@gmail.com</li>
-                    <li>Denver, Colorado</li>
-                    <li class="pt-4"><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li>
-                    <li><a href="#" class="hover:text-white transition-colors">Terms of Service</a></li>
-                 </ul>
-            </div>
-        </div>
+    <footer class="site-footer">
+      <div class="container">
+        <small>Deployed on Netlify, edited with Decap CMS.</small>
+      </div>
     </footer>
 
-    <!-- LOGIC -->
+    <!-- Markdown renderer -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
     <script>
-        // --- DATA ---
-        const CONTENT = {
-            en: {
-                nav: { about: "Who We Are", programs: "Programs", resources: "Resources", donate: "Donate", volunteer: "Volunteer", host: "Host" },
-                hero: { title: "Hope Has No Borders", subtitle: "A grassroots response to the humanitarian crisis in Denver, bridging the gap from crisis to stability through housing, legal aid, and dignity.", cta_primary: "Find Resources", cta_secondary: "Our Impact", est: "Est. 2023 • Denver, CO" },
-                mission: { statement: "To provide humanitarian aid and support to immigrants and asylum seekers, fostering a community where everyone has the opportunity to thrive.", sub: "We are moms, neighbors, and community members who refused to look away." },
-                home_cards: { host: { title: "Host Homes", desc: "Connecting local homeowners with spare rooms to families needing transitional housing for 90 days.", action: "Apply to Host" }, legal: { title: "Legal Support", desc: "Pro se asylum clinics and work authorization assistance to help families gain independence.", action: "View Clinics" }, crisis: { title: "Crisis Fund", desc: "Emergency financial assistance for immediate needs that other social safety nets might miss.", action: "Support Fund" } },
-                programs_page: { label: "Our Work", title: "Bridging the Gap", subtitle: "We focus on three critical pillars: stability through housing, empowerment through legal status, and integration through community service.", host: { title: "Host Home Program", desc: "Our flagship initiative connects compassionate homeowners with asylum seekers needing transitional housing. This 90-day program provides a stable base for families to find work, enroll kids in school, and breathe.", list: ['90-Day Transitional Period', 'Dedicated Case Management', 'Host Stipends Available', 'Background Checks Required'], button: "Become a Host", quote: "Hosting gave us more than we gave. It gave us family.", quote_author: "Sarah, Denver Host" }, legal: { title: "Pathways to HOPE", desc: "Legal status is the key to self-sufficiency. We run 'pro se' asylum workshops where applicants can file on their own with guidance, saving thousands in legal fees.", workshop_title: "Next Workshop", workshop_date: "Oct 14th", workshop_time: "10:00 AM", workshop_loc: "Denver Library", button: "See All Events" } },
-                volunteer_page: { title: "Volunteer", subtitle: "We are a volunteer-run organization. Your time is our most valuable resource.", button: "Join the Team", pro_title: "Professional Skills", pro_desc: "We specifically need professionals who can donate 2-5 hours a week in these areas:", pro_list: ['Grant Writing', 'Social Media Management', 'Web Development', 'Event Planning'], comm_title: "Community Support", comm_desc: "Ad-hoc opportunities for those who want to help when they can.", comm_list: ['Event Setup/Tear Down', 'Childcare during Workshops', 'Meal Prep for Families', 'Donation Sorting'] },
-                host_page: { title: "Host Application", step: "Step 1 of 3: Preliminary Assessment", fname: "First Name", lname: "Last Name", accom_label: "Accommodation Type", accom_opts: ['Spare Bedroom', 'Basement Unit', 'ADU / Carriage House', 'Whole House'], motivation: "Motivation", motivation_ph: "Why do you want to become a host?", disclaimer: "By continuing, you agree to a preliminary background check and home visit interview. All data is encrypted.", button: "Continue to Step 2" },
-                donate_page: { action: "Take Action", title: "Donate", subtitle: "Your contribution directly impacts the lives of asylum seekers in Denver. We operate with minimal overhead to ensure funds go where they are needed most.", button_money: "Make a Financial Contribution", corp_title: "Corporate Matching", corp_desc: "Does your employer match donations? Double your impact today.", corp_btn: "Check Eligibility", items_title: "Item Donations", items_sub: "We accept specific new or gently used items.", coord_link: "Coordinate a drop-off" },
-                about_page: { title: "Who We Are", subtitle: "We are not a large institution. We are moms, neighbors, and community members who refused to look away." },
-                resources: { title: "Community Directory", subtitle: "Essential services for our new neighbors.", filters: { all: "View All", food: "Food Pantries", legal: "Legal Aid", health: "Healthcare", housing: "Shelter" }, card: { directions: "Directions", call: "Call" }, map_badge: { title: "Live Directory", desc: "Real-time resource tracking. Use filters to narrow down services near you." } },
-                team: [ { name: "Jenifer Kettering", role: "Executive Director & Founder", bio: "Bringing 20+ years of experience in mental health and foster care to create programs that welcome newcomers." }, { name: "Andrea Ryall", role: "Executive Director & Founder", bio: "A community builder and mother who founded HHNB to bring dignity and relief to those moving from crisis to hope." }, { name: "Kasey Fox", role: "Board Member", bio: "Senior Director at Mile High United Way with a decade of disaster response experience." }, { name: "Matt Tebo", role: "Board Member", bio: "Nonprofit program developer with an MBA in Social Enterprise." }, { name: "Jill Roth", role: "Bilingual Contractor", bio: "Former Language Director for AMIGOS de las Américas, supporting immigrant communities." } ],
-                donation_items: [ { title: "Transportation", desc: "Bikes, helmets, locks, RTD passes", icon: "truck" }, { title: "Mailing Supplies", desc: "Stamps, manilla envelopes", icon: "mail" }, { title: "Food Staples", desc: "Gift cards, dry goods (beans, rice)", icon: "gift" }, { title: "Medicine", desc: "Ibuprofen, Neosporin, First Aid", icon: "pill" }, { title: "Welcome Kits", desc: "Hygiene items, socks/underwear", icon: "baby" }, { title: "Bedding", desc: "Twin mattresses, sheets, pillows", icon: "home" }, { title: "Technology", desc: "Working phones, laptops, tablets", icon: "wifi" } ]
-            },
-            es: {
-                nav: { about: "Quiénes Somos", programs: "Programas", resources: "Recursos", donate: "Donar", volunteer: "Voluntariado", host: "Anfitrión" },
-                hero: { title: "La Esperanza No Tiene Fronteras", subtitle: "Una respuesta comunitaria a la crisis humanitaria en Denver, cerrando la brecha desde la crisis hasta la estabilidad a través de vivienda, ayuda legal y dignidad.", cta_primary: "Buscar Recursos", cta_secondary: "Nuestro Impacto", est: "Est. 2023 • Denver, CO" },
-                mission: { statement: "Brindar ayuda humanitaria y apoyo a inmigrantes y solicitantes de asilo, fomentando una comunidad donde todos tengan la oportunidad de prosperar.", sub: "Somos madres, vecinos y miembros de la comunidad que se negaron a mirar hacia otro lado." },
-                home_cards: { host: { title: "Hogares de Acogida", desc: "Conectando propietarios locales con habitaciones libres a familias que necesitan vivienda transitoria por 90 días.", action: "Aplicar para Anfitrión" }, legal: { title: "Apoyo Legal", desc: "Clínicas de asilo pro se y asistencia para autorización de trabajo para ayudar a las familias a ganar independencia.", action: "Ver Clínicas" }, crisis: { title: "Fondo de Crisis", desc: "Asistencia financiera de emergencia para necesidades inmediatas que otras redes de seguridad social podrían pasar por alto.", action: "Apoyar el Fondo" } },
-                programs_page: { label: "Nuestro Trabajo", title: "Cerrando la Brecha", subtitle: "Nos enfocamos en tres pilares críticos: estabilidad a través de la vivienda, empoderamiento a través del estatus legal e integración a través del servicio comunitario.", host: { title: "Programa de Anfitriones", desc: "Nuestra iniciativa principal conecta a propietarios compasivos con solicitantes de asilo que necesitan vivienda transitoria. Este programa de 90 días proporciona una base estable para que las familias encuentren trabajo, inscriban a los niños en la escuela y respiren.", list: ['Período de Transición de 90 Días', 'Gestión de Casos Dedicada', 'Estipendios para Anfitriones Disponibles', 'Se Requieren Verificaciones de Antecedentes'], button: "Ser Anfitrión", quote: "Hospedar nos dio más de lo que dimos. Nos dio familia.", quote_author: "Sarah, Anfitriona de Denver" }, legal: { title: "Caminos a la ESPERANZA", desc: "El estatus legal es la clave para la autosuficiencia. Realizamos talleres de asilo 'pro se' donde los solicitantes pueden presentar su solicitud por sí mismos con orientación, ahorrando miles en honorarios legales.", workshop_title: "Próximo Taller", workshop_date: "14 de Oct", workshop_time: "10:00 AM", workshop_loc: "Biblioteca de Denver", button: "Ver Todos los Eventos" } },
-                volunteer_page: { title: "Voluntariado", subtitle: "Somos una organización dirigida por voluntarios. Tu tiempo es nuestro recurso más valioso.", button: "Únete al Equipo", pro_title: "Habilidades Profesionales", pro_desc: "Necesitamos específicamente profesionales que puedan donar 2-5 horas a la semana en estas áreas:", pro_list: ['Redacción de Subvenciones', 'Gestión de Redes Sociales', 'Desarrollo Web', 'Planificación de Eventos'], comm_title: "Apoyo Comunitario", comm_desc: "Oportunidades ad-hoc para aquellos que quieren ayudar cuando pueden.", comm_list: ['Montaje/Desmontaje de Eventos', 'Cuidado de Niños durante Talleres', 'Preparación de Comidas', 'Clasificación de Donaciones'] },
-                host_page: { title: "Solicitud de Anfitrión", step: "Paso 1 de 3: Evaluación Preliminar", fname: "Nombre", lname: "Apellido", accom_label: "Tipo de Alojamiento", accom_opts: ['Habitación Libre', 'Unidad en Sótano', 'ADU / Casa de Carruajes', 'Casa Completa'], motivation: "Motivación", motivation_ph: "¿Por qué quieres convertirte en anfitrión?", disclaimer: "Al continuar, aceptas una verificación de antecedentes preliminar y una entrevista de visita domiciliaria. Todos los datos están encriptados.", button: "Continuar al Paso 2" },
-                donate_page: { action: "Toma Acción", title: "Donar", subtitle: "Tu contribución impacta directamente las vidas de los solicitantes de asilo en Denver. Operamos con gastos mínimos para asegurar que los fondos vayan donde más se necesitan.", button_money: "Hacer una Contribución Financiera", corp_title: "Coincidencia Corporativa", corp_desc: "¿Tu empleador iguala las donaciones? Duplica tu impacto hoy.", corp_btn: "Verificar Elegibilidad", items_title: "Donaciones de Artículos", items_sub: "Aceptamos artículos específicos nuevos o poco usados.", coord_link: "Coordinar una entrega" },
-                about_page: { title: "Quiénes Somos", subtitle: "No somos una gran institución. Somos madres, vecinos y miembros de la comunidad que se negaron a mirar hacia otro lado." },
-                resources: { title: "Directorio Comunitario", subtitle: "Servicios esenciales para nuestros nuevos vecinos.", filters: { all: "Ver Todos", food: "Despensas", legal: "Ayuda Legal", health: "Salud", housing: "Refugio" }, card: { directions: "Direcciones", call: "Llamar" }, map_badge: { title: "Directorio en Vivo", desc: "Seguimiento de recursos en tiempo real. Usa filtros para reducir los servicios cerca de ti." } },
-                team: [ { name: "Jenifer Kettering", role: "Directora Ejecutiva y Fundadora", bio: "Aporta más de 20 años de experiencia en salud mental y cuidado de crianza para crear programas que dan la bienvenida a los recién llegados." }, { name: "Andrea Ryall", role: "Directora Ejecutiva y Fundadora", bio: "Una constructora comunitaria y madre que fundó HHNB para brindar dignidad y alivio a quienes pasan de la crisis a la esperanza." }, { name: "Kasey Fox", role: "Miembro de la Junta", bio: "Directora Senior en Mile High United Way con una década de experiencia en respuesta a desastres." }, { name: "Matt Tebo", role: "Miembro de la Junta", bio: "Desarrollador de programas sin fines de lucro con un MBA en Emprendimiento Social." }, { name: "Jill Roth", role: "Contratista Bilingüe", bio: "Ex Directora de Idiomas para AMIGOS de las Américas, apoyando a comunidades inmigrantes." } ],
-                donation_items: [ { title: "Transporte", desc: "Bicicletas, cascos, candados, pases RTD", icon: "truck" }, { title: "Suministros de Correo", desc: "Sellos, sobres manila", icon: "mail" }, { title: "Alimentos Básicos", desc: "Tarjetas de regalo, productos secos (frijoles, arroz)", icon: "gift" }, { title: "Medicina", desc: "Ibuprofeno, Neosporin, Primeros Auxilios", icon: "pill" }, { title: "Kits de Bienvenida", desc: "Artículos de higiene, calcetines/ropa interior", icon: "baby" }, { title: "Ropa de Cama", desc: "Colchones individuales, sábanas, almohadas", icon: "home" }, { title: "Tecnología", desc: "Teléfonos, portátiles, tabletas que funcionen", icon: "wifi" } ]
-            }
-        };
-
-        const RESOURCE_LOCATIONS = [
-            { id: 1, name: "Denver Central Food Bank", type: "food", lat: 39.7392, lng: -104.9903, status: "Open", hours: "9am - 5pm", address: "123 Broadway, Denver" },
-            { id: 2, name: "Legal Aid Clinic (HHNB)", type: "legal", lat: 39.7420, lng: -104.9800, status: "Open", hours: "10am - 4pm", address: "Community Center Room B" },
-            { id: 3, name: "Emergency Night Shelter", type: "housing", lat: 39.7500, lng: -104.9950, status: "Full", hours: "6pm - 8am", address: "456 Colfax Ave" },
-            { id: 4, name: "Community Health Station", type: "health", lat: 39.7300, lng: -104.9700, status: "Open", hours: "24/7", address: "789 Park Ave" },
-            { id: 5, name: "Family Supply Depot", type: "food", lat: 39.7550, lng: -104.9850, status: "Open", hours: "10am - 2pm", address: "2200 Lawrence St" },
-        ];
-
-        // --- STATE ---
-        let currentLang = 'en';
-        let currentPage = 'home';
-        let resourceFilter = 'all';
-
-        // --- CORE FUNCTIONS ---
-
-        function init() {
-            lucide.createIcons();
-            updateLanguage();
-            renderDynamicContent();
-            window.addEventListener('scroll', handleScroll);
-            router('home'); // initial load
-        }
-
-        function router(page) {
-            currentPage = page;
-            
-            // Hide all sections
-            document.querySelectorAll('section[id^="view-"]').forEach(el => el.classList.add('hidden-section'));
-            
-            // Show target section
-            const target = document.getElementById(`view-${page}`);
-            if (target) {
-                target.classList.remove('hidden-section');
-            }
-            
-            // Scroll top
-            window.scrollTo(0,0);
-            
-            // Update Navbar State (Home needs transparent nav initially)
-            handleScroll();
-            
-            // Close mobile menu if open
-            const menu = document.getElementById('mobile-menu');
-            menu.style.opacity = '0';
-            menu.style.pointerEvents = 'none';
-
-            // Active state for links
-            document.querySelectorAll('.nav-link').forEach(el => {
-                if(el.getAttribute('onclick').includes(page)) {
-                    el.classList.add('text-orange-600');
-                } else {
-                    el.classList.remove('text-orange-600');
-                }
+      // Optional: after Identity login, return to /admin/
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on("init", (user) => {
+          if (!user) {
+            window.netlifyIdentity.on("login", () => {
+              document.location.href = "/admin/";
             });
+          }
+        });
+      }
+
+      function parseFrontMatter(md) {
+        const trimmed = md.replace(/^\uFEFF/, "");
+        if (!trimmed.startsWith("---")) return { data: {}, body: trimmed };
+        const end = trimmed.indexOf("\n---", 3);
+        if (end === -1) return { data: {}, body: trimmed };
+        const fmBlock = trimmed.slice(3, end).trim();
+        const body = trimmed.slice(end + 4).trim();
+        const data = {};
+        for (const line of fmBlock.split(/\r?\n/)) {
+          const m = line.match(/^\s*([A-Za-z0-9_\-]+)\s*:\s*(.*)\s*$/);
+          if (m) data[m[1]] = m[2].replace(/^"|"$/g, "");
         }
+        return { data, body };
+      }
 
-        function toggleLanguage() {
-            currentLang = currentLang === 'en' ? 'es' : 'en';
-            document.getElementById('lang-toggle').innerText = currentLang;
-            updateLanguage();
-            renderDynamicContent(); // Re-render lists in new language
-        }
+      async function loadHome() {
+        const res = await fetch("/content/home.md", { cache: "no-store" });
+        if (!res.ok) throw new Error("Failed to load content/home.md");
+        const md = await res.text();
+        const { data, body } = parseFrontMatter(md);
 
-        function updateLanguage() {
-            // Find all elements with data-key
-            document.querySelectorAll('[data-key]').forEach(el => {
-                const key = el.getAttribute('data-key');
-                const keys = key.split('.');
-                let val = CONTENT[currentLang];
-                keys.forEach(k => val = val[k]);
-                
-                if (val) {
-                    el.innerText = val;
-                }
-            });
+        document.getElementById("page-title").textContent = data.title || "Home";
+        document.getElementById("page-body").innerHTML = marked.parse(body);
+      }
 
-            // Specific placeholders
-            const motivationInput = document.getElementById('host-motivation');
-            if(motivationInput) motivationInput.placeholder = CONTENT[currentLang].host_page.motivation_ph;
-        }
-
-        function handleScroll() {
-            const nav = document.getElementById('navbar');
-            const divider = document.getElementById('nav-divider');
-            const menuIcon = document.getElementById('menu-icon');
-            const isScrolled = window.scrollY > 20;
-            const isHome = currentPage === 'home';
-
-            if (isScrolled) {
-                nav.classList.add('nav-scrolled');
-                nav.classList.remove('nav-transparent', 'nav-home-top', 'text-white');
-                nav.classList.add('text-black');
-                divider.classList.remove('bg-white/30');
-                divider.classList.add('bg-neutral-300');
-            } else {
-                nav.classList.remove('nav-scrolled');
-                nav.classList.add('nav-transparent');
-                
-                if (isHome) {
-                    nav.classList.add('nav-home-top', 'text-white');
-                    nav.classList.remove('text-black');
-                    divider.classList.add('bg-white/30');
-                    divider.classList.remove('bg-neutral-300');
-                } else {
-                    nav.classList.remove('nav-home-top', 'text-white');
-                    nav.classList.add('text-black');
-                    divider.classList.remove('bg-white/30');
-                    divider.classList.add('bg-neutral-300');
-                }
-            }
-        }
-
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobile-menu');
-            if (menu.style.opacity === '1') {
-                menu.style.opacity = '0';
-                menu.style.pointerEvents = 'none';
-            } else {
-                menu.style.opacity = '1';
-                menu.style.pointerEvents = 'auto';
-            }
-        }
-
-        function setResourceFilter(type) {
-            resourceFilter = type;
-            renderDynamicContent(); // Re-render resources
-        }
-
-        // --- DYNAMIC RENDERERS (Handle Lists & Complex HTML that changes with Lang) ---
-
-        function renderDynamicContent() {
-            const t = CONTENT[currentLang];
-
-            // 1. PROGRAMS
-            const progHTML = `
-                <!-- Host Program -->
-                <div class="grid md:grid-cols-2 gap-16 items-center">
-                   <div class="order-2 md:order-1">
-                     <div class="aspect-[4/5] bg-neutral-100 overflow-hidden relative">
-                       <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
-                       <div class="absolute bottom-6 left-6 bg-white p-4 max-w-xs shadow-lg">
-                         <p class="font-serif italic text-lg">"${t.programs_page.host.quote}"</p>
-                         <p class="text-xs text-neutral-400 mt-2 uppercase tracking-widest">— ${t.programs_page.host.quote_author}</p>
-                       </div>
-                     </div>
-                   </div>
-                   <div class="order-1 md:order-2">
-                     <div class="w-12 h-12 text-orange-600 mb-6"><i data-lucide="home"></i></div>
-                     <h2 class="text-4xl font-serif mb-6">${t.programs_page.host.title}</h2>
-                     <p class="text-lg text-neutral-600 font-light mb-6 leading-relaxed">${t.programs_page.host.desc}</p>
-                     <ul class="space-y-4 mb-10">
-                        ${t.programs_page.host.list.map(i => `<li class="flex items-center gap-3 text-neutral-700"><div class="w-1.5 h-1.5 bg-orange-600 rounded-full"></div> ${i}</li>`).join('')}
-                     </ul>
-                     <button onclick="router('host')" class="bg-black text-white px-8 py-4 rounded-sm text-xs font-bold uppercase tracking-widest hover:bg-orange-600 transition-colors">${t.programs_page.host.button}</button>
-                   </div>
-                </div>
-
-                <!-- Legal Program -->
-                <div class="grid md:grid-cols-2 gap-16 items-center mt-32">
-                   <div>
-                     <div class="w-12 h-12 text-purple-600 mb-6"><i data-lucide="scale"></i></div>
-                     <h2 class="text-4xl font-serif mb-6">${t.programs_page.legal.title}</h2>
-                     <p class="text-lg text-neutral-600 font-light mb-6 leading-relaxed">${t.programs_page.legal.desc}</p>
-                     <div class="bg-neutral-50 p-6 border border-neutral-100 mb-8">
-                       <h4 class="font-serif text-xl mb-2">${t.programs_page.legal.workshop_title}</h4>
-                       <div class="flex items-center gap-4 text-sm text-neutral-500">
-                         <span class="flex items-center gap-1"><i data-lucide="calendar" class="w-4 h-4"></i> ${t.programs_page.legal.workshop_date}</span>
-                         <span class="flex items-center gap-1"><i data-lucide="clock" class="w-4 h-4"></i> ${t.programs_page.legal.workshop_time}</span>
-                         <span class="flex items-center gap-1"><i data-lucide="map-pin" class="w-4 h-4"></i> ${t.programs_page.legal.workshop_loc}</span>
-                       </div>
-                     </div>
-                     <button onclick="router('resources')" class="border-b border-black pb-1 text-xs font-bold uppercase tracking-widest hover:text-orange-600 hover:border-orange-600 transition-colors">${t.programs_page.legal.button}</button>
-                   </div>
-                   <div>
-                     <div class="aspect-[4/5] bg-neutral-100 overflow-hidden">
-                       <img src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
-                     </div>
-                   </div>
-                </div>
-            `;
-            document.getElementById('programs-container').innerHTML = progHTML;
-
-            // 2. VOLUNTEER ROLES
-            const volHTML = `
-                <div class="bg-white p-10 border border-neutral-100 hover:shadow-lg transition-all duration-300 group">
-                   <div class="w-10 h-10 text-neutral-300 group-hover:text-blue-600 mb-6 transition-colors"><i data-lucide="briefcase"></i></div>
-                   <h3 class="text-3xl font-serif mb-4">${t.volunteer_page.pro_title}</h3>
-                   <p class="text-neutral-500 mb-8 font-light">${t.volunteer_page.pro_desc}</p>
-                   <ul class="space-y-4 mb-8">
-                     ${t.volunteer_page.pro_list.map(r => `<li class="flex items-center gap-3 text-sm font-medium border-b border-neutral-100 pb-2"><i data-lucide="check-circle" class="w-4 h-4 text-blue-600"></i> ${r}</li>`).join('')}
-                   </ul>
-                </div>
-                <div class="bg-white p-10 border border-neutral-100 hover:shadow-lg transition-all duration-300 group">
-                   <div class="w-10 h-10 text-neutral-300 group-hover:text-green-600 mb-6 transition-colors"><i data-lucide="users"></i></div>
-                   <h3 class="text-3xl font-serif mb-4">${t.volunteer_page.comm_title}</h3>
-                   <p class="text-neutral-500 mb-8 font-light">${t.volunteer_page.comm_desc}</p>
-                   <ul class="space-y-4 mb-8">
-                     ${t.volunteer_page.comm_list.map(r => `<li class="flex items-center gap-3 text-sm font-medium border-b border-neutral-100 pb-2"><i data-lucide="check-circle" class="w-4 h-4 text-green-600"></i> ${r}</li>`).join('')}
-                   </ul>
-                </div>
-            `;
-            document.getElementById('volunteer-roles-container').innerHTML = volHTML;
-
-            // 3. TEAM
-            const teamHTML = t.team.map(m => `
-                <div class="md:col-span-4 bg-white p-8 shadow-sm border border-neutral-100 hover:shadow-lg transition-all duration-300 group">
-                    <div class="mb-6">
-                       <span class="text-[0.6rem] font-bold uppercase tracking-widest text-neutral-400 group-hover:text-orange-600 transition-colors">${m.role}</span>
-                       <h3 class="text-2xl font-serif mt-2">${m.name}</h3>
-                    </div>
-                    <p class="text-neutral-500 font-light text-sm leading-relaxed mb-6">${m.bio}</p>
-                    <div class="w-8 h-px bg-neutral-200 group-hover:bg-orange-600 transition-colors"></div>
-                 </div>
-            `).join('');
-            document.getElementById('team-grid').innerHTML = teamHTML;
-
-            // 4. DONATION ITEMS
-            const itemsHTML = t.donation_items.map(item => `
-                <div class="flex flex-col items-center text-center group">
-                   <div class="w-16 h-16 rounded-full bg-neutral-50 flex items-center justify-center mb-6 text-neutral-400 group-hover:text-orange-600 group-hover:bg-orange-50 transition-colors duration-300">
-                     <i data-lucide="${item.icon}" class="w-7 h-7"></i>
-                   </div>
-                   <h4 class="font-serif text-xl mb-2">${item.title}</h4>
-                   <p class="text-sm text-neutral-500 font-light">${item.desc}</p>
-                </div>
-            `).join('');
-            document.getElementById('donation-items').innerHTML = itemsHTML;
-
-            // 5. RESOURCES
-            // Filters
-            const filtersHTML = Object.keys(t.resources.filters).map(key => `
-                 <button onclick="setResourceFilter('${key}')" class="px-6 py-3 rounded-sm text-xs font-bold uppercase tracking-widest whitespace-nowrap transition-all border ${resourceFilter === key ? 'bg-black text-white border-black' : 'bg-white text-black border-neutral-200 hover:border-black'}">
-                   ${t.resources.filters[key]}
-                 </button>
-            `).join('');
-            document.getElementById('resource-filters').innerHTML = filtersHTML;
-
-            // List
-            const filteredResources = resourceFilter === 'all' ? RESOURCE_LOCATIONS : RESOURCE_LOCATIONS.filter(r => r.type === resourceFilter);
-            const resourcesHTML = filteredResources.map(loc => `
-               <div class="p-8 border-b border-neutral-100 hover:bg-neutral-50 transition-colors cursor-pointer group">
-                  <div class="flex justify-between items-start mb-2">
-                     <span class="text-[0.6rem] font-bold uppercase tracking-widest text-neutral-400">${loc.type}</span>
-                     <span class="text-[0.6rem] font-bold uppercase tracking-widest ${loc.status === 'Open' ? 'text-green-600' : 'text-neutral-400'}">${loc.status}</span>
-                  </div>
-                  <h3 class="text-xl font-serif mb-2 group-hover:text-orange-600 transition-colors">${loc.name}</h3>
-                  <p class="text-neutral-500 text-sm font-light mb-1">${loc.address}</p>
-                  <p class="text-neutral-400 text-xs">${loc.hours}</p>
-                  <div class="mt-4 flex gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                     <button class="text-xs font-bold uppercase border-b border-black hover:text-orange-600 hover:border-orange-600">${t.resources.card.directions}</button>
-                     <button class="text-xs font-bold uppercase border-b border-black hover:text-orange-600 hover:border-orange-600">${t.resources.card.call}</button>
-                  </div>
-               </div>
-            `).join('');
-            document.getElementById('resource-list').innerHTML = resourcesHTML;
-
-            // 6. HOST ACCOM OPTIONS
-            const accomHTML = t.host_page.accom_opts.map(opt => `
-               <label class="border border-neutral-200 p-4 cursor-pointer hover:border-orange-600 hover:bg-orange-50 transition-all flex items-center gap-3">
-                 <input type="radio" name="accom" class="accent-orange-600" />
-                 <span class="text-sm font-medium">${opt}</span>
-               </label>
-            `).join('');
-            document.getElementById('host-accom-opts').innerHTML = accomHTML;
-
-            // REFRESH ICONS
-            lucide.createIcons();
-        }
-
-        // Initialize
-        window.onload = init;
-
+      loadHome().catch((err) => {
+        document.getElementById("page-title").textContent = "Content not found";
+        document.getElementById("page-body").textContent =
+          "Make sure content/home.md exists in the repo and is deployed.";
+        console.error(err);
+      });
     </script>
-</body>
+  </body>
 </html>

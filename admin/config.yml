@@ -5,29 +5,91 @@ backend:
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
 
-local_backend: true
-
 collections:
-  - name: "pages"
-    label: "Pages"
+  - name: "settings"
+    label: "Site Settings"
     files:
-      - file: "content/home.yml"
-        label: "Home"
-        name: "home"
+      - name: "general"
+        label: "General"
+        file: "content/settings.json"
+        format: "json"
         fields:
-          - { label: "Hero Badge", name: "hero_badge", widget: "string" }
-          - { label: "Hero Title", name: "hero_title", widget: "string" }
-          - { label: "Hero Subtitle", name: "hero_subtitle", widget: "text" }
-          - label: "Metrics"
-            name: "metrics"
-            widget: "list"
-            fields:
-              - { label: "Label", name: "label", widget: "string" }
-              - { label: "Value", name: "val", widget: "string" }
+          - { label: "Site Title", name: "siteTitle", widget: "string" }
+          - { label: "Logo Image", name: "logoImage", widget: "image", required: false }
+          - { label: "Logo Alt Text", name: "logoAlt", widget: "string", required: false }
+          - { label: "LinkedIn URL", name: "linkedinUrl", widget: "string", required: false }
+          - { label: "Instagram URL", name: "instagramUrl", widget: "string", required: false }
+          - { label: "Footer Description", name: "footerDescription", widget: "text", required: false }
+          - { label: "HQ Block", name: "hqBlock", widget: "text", required: false }
 
-      - file: "content/company.yml"
-        label: "Company"
-        name: "company"
+  - name: "pages"
+    label: "Pages Content"
+    files:
+      - name: "pages"
+        label: "All Pages"
+        file: "content/pages.json"
+        format: "json"
         fields:
-          - { label: "Title", name: "title", widget: "string" }
-          - { label: "Body", name: "body", widget: "markdown" }
+          - label: "Home"
+            name: "home"
+            widget: "object"
+            fields:
+              - { label: "Badge Text", name: "badgeText", widget: "string" }
+              - { label: "Headline Line 1", name: "headline1", widget: "string" }
+              - { label: "Headline Emphasis", name: "headlineEmphasis", widget: "string" }
+              - { label: "Headline Line 3", name: "headline3", widget: "string" }
+              - { label: "Subheadline", name: "subheadline", widget: "text" }
+              - { label: "Primary CTA Label", name: "primaryCtaLabel", widget: "string" }
+              - { label: "Secondary CTA Label", name: "secondaryCtaLabel", widget: "string" }
+              - label: "Stat Cards"
+                name: "stats"
+                widget: "list"
+                fields:
+                  - { label: "Label", name: "label", widget: "string" }
+                  - { label: "Value", name: "value", widget: "string" }
+
+          - label: "Technology"
+            name: "technology"
+            widget: "object"
+            fields:
+              - { label: "Page Title", name: "title", widget: "string" }
+              - { label: "Section Eyebrow", name: "eyebrow", widget: "string" }
+              - { label: "Section Title", name: "sectionTitle", widget: "string" }
+              - { label: "Paragraph 1", name: "p1", widget: "text" }
+              - { label: "Paragraph 2", name: "p2", widget: "text" }
+              - label: "Feature Cards"
+                name: "features"
+                widget: "list"
+                fields:
+                  - { label: "Icon", name: "icon", widget: "string" }
+                  - { label: "Title", name: "title", widget: "string" }
+                  - { label: "Body", name: "body", widget: "string" }
+
+          - label: "Specs"
+            name: "specs"
+            widget: "object"
+            fields:
+              - { label: "Page Title", name: "title", widget: "string" }
+              - label: "Table Rows"
+                name: "rows"
+                widget: "list"
+                fields:
+                  - { label: "Parameter", name: "parameter", widget: "string" }
+                  - { label: "PowerPod 250", name: "pp250", widget: "string" }
+                  - { label: "PowerPod 1000", name: "pp1000", widget: "string" }
+              - { label: "Bottom Button Label", name: "buttonLabel", widget: "string" }
+
+          - label: "Generic Pages"
+            name: "generic"
+            widget: "object"
+            fields:
+              - { label: "Solutions Title", name: "solutionsTitle", widget: "string" }
+              - { label: "Solutions Body", name: "solutionsBody", widget: "text" }
+              - { label: "Company Title", name: "companyTitle", widget: "string" }
+              - { label: "Company Body", name: "companyBody", widget: "text" }
+              - { label: "Contact Title", name: "contactTitle", widget: "string" }
+              - { label: "Contact Body", name: "contactBody", widget: "text" }
+              - { label: "Safety Title", name: "safetyTitle", widget: "string" }
+              - { label: "Safety Body", name: "safetyBody", widget: "text" }
+              - { label: "Tax Title", name: "taxTitle", widget: "string" }
+              - { label: "Tax Body", name: "taxBody", widget: "text" }

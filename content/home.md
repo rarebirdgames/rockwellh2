@@ -1,6 +1,8 @@
 ---
-title: Home
+title: "Home"
 ---
-I CAN EDIT MY WEBSITE TO MY HEARTS CONTENT
 
-![](/images/uploads/65258f1075588.image.jpg)
+Welcome to Rockwell H2.
+
+- Edit this content in **Decap CMS** at `/admin/`.
+- Upload images in the editor, they will be saved to `images/uploads`.

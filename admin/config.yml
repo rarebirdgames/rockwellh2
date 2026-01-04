@@ -2,19 +2,22 @@ backend:
   name: git-gateway
   branch: main
 
+# Enable the 'Workflow' tab for a professional 'Draft/Review/Ready' UI
+publish_mode: editorial_workflow
+
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
 
-# Display customization
+# Branding the CMS
 display_url: https://your-site-url.com
 logo_url: https://your-site-url.com/logo-for-cms.png
 
 collections:
   - name: "settings"
     label: "⚙️ Site Settings"
-    delete: false # Prevent accidental deletion of essential settings
+    delete: false
     editor:
-      preview: false # No preview needed for global settings
+      preview: false
     files:
       - name: "general"
         label: "General Configuration"
@@ -22,7 +25,7 @@ collections:
         format: "json"
         fields:
           - { label: "Site Title", name: "siteTitle", widget: "string", hint: "The name that appears in browser tabs." }
-          - { label: "Logo Image", name: "logoImage", widget: "image", required: false }
+          - { label: "Logo Image", name: "logoImage", widget: "image", required: false, hint: "Upload a high-res PNG or SVG." }
           - { label: "Logo Alt Text", name: "logoAlt", widget: "string", required: false }
           - { label: "LinkedIn URL", name: "linkedinUrl", widget: "string", required: false }
           - { label: "Instagram URL", name: "instagramUrl", widget: "string", required: false }
@@ -43,9 +46,9 @@ collections:
             name: "home"
             widget: "object"
             fields:
-              - { label: "Badge Text", name: "badgeText", widget: "string", hint: "Small text above the headline." }
+              - { label: "Badge Text", name: "badgeText", widget: "string", hint: "Small text above the headline (e.g. 'NEW RELEASE')." }
               - { label: "Headline Line 1", name: "headline1", widget: "string" }
-              - { label: "Headline Emphasis", name: "headlineEmphasis", widget: "string", hint: "The part of the headline that is highlighted/italicized." }
+              - { label: "Headline Emphasis", name: "headlineEmphasis", widget: "string", hint: "The part of the headline that is highlighted or italicized." }
               - { label: "Headline Line 3", name: "headline3", widget: "string" }
               - { label: "Subheadline", name: "subheadline", widget: "text" }
               - { label: "Primary CTA Label", name: "primaryCtaLabel", widget: "string" }
@@ -53,6 +56,7 @@ collections:
               - label: "Stat Cards"
                 name: "stats"
                 widget: "list"
+                # Summary makes the list view beautiful and scannable
                 summary: '{{fields.label}}: {{fields.value}}'
                 fields:
                   - { label: "Label", name: "label", widget: "string" }
@@ -73,7 +77,7 @@ collections:
                 widget: "list"
                 summary: '{{fields.title}}'
                 fields:
-                  - { label: "Icon Name", name: "icon", widget: "string", hint: "e.g., 'bolt', 'shield', 'cpu'" }
+                  - { label: "Icon Name", name: "icon", widget: "string", hint: "Use Lucide icon names (e.g., 'bolt', 'cpu')." }
                   - { label: "Title", name: "title", widget: "string" }
                   - { label: "Body Text", name: "body", widget: "string" }
 
@@ -88,7 +92,7 @@ collections:
                 widget: "list"
                 summary: '{{fields.parameter}}'
                 fields:
-                  - { label: "Parameter Name", name: "parameter", widget: "string" }
+                  - { label: "Parameter Name", name: "parameter", widget: "string", hint: "e.g. 'Battery Life' or 'Max Speed'" }
                   - { label: "PowerPod 250 Value", name: "pp250", widget: "string" }
                   - { label: "PowerPod 1000 Value", name: "pp1000", widget: "string" }
               - { label: "Bottom Button Label", name: "buttonLabel", widget: "string" }
@@ -98,6 +102,6 @@ collections:
             name: "generic"
             widget: "object"
             fields:
-              - { label: "Solutions Body", name: "solutionsBody", widget: "markdown" }
+              - { label: "Solutions Body", name: "solutionsBody", widget: "markdown", hint: "Rich text editor for the Solutions page." }
               - { label: "Company Body", name: "companyBody", widget: "markdown" }
               - { label: "Contact Body", name: "contactBody", widget: "markdown" }

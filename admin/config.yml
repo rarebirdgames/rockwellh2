@@ -5,38 +5,47 @@ backend:
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
 
+# Display customization
+display_url: https://your-site-url.com
+logo_url: https://your-site-url.com/logo-for-cms.png
+
 collections:
   - name: "settings"
-    label: "Site Settings"
+    label: "⚙️ Site Settings"
+    delete: false # Prevent accidental deletion of essential settings
+    editor:
+      preview: false # No preview needed for global settings
     files:
       - name: "general"
-        label: "General"
+        label: "General Configuration"
         file: "content/settings.json"
         format: "json"
         fields:
-          - { label: "Site Title", name: "siteTitle", widget: "string" }
+          - { label: "Site Title", name: "siteTitle", widget: "string", hint: "The name that appears in browser tabs." }
           - { label: "Logo Image", name: "logoImage", widget: "image", required: false }
           - { label: "Logo Alt Text", name: "logoAlt", widget: "string", required: false }
           - { label: "LinkedIn URL", name: "linkedinUrl", widget: "string", required: false }
           - { label: "Instagram URL", name: "instagramUrl", widget: "string", required: false }
           - { label: "Footer Description", name: "footerDescription", widget: "text", required: false }
-          - { label: "HQ Block", name: "hqBlock", widget: "text", required: false }
+          - { label: "HQ Block", name: "hqBlock", widget: "text", required: false, hint: "Physical address or headquarter details." }
 
   - name: "pages"
-    label: "Pages Content"
+    label: "📄 Page Content"
+    delete: false
     files:
       - name: "pages"
-        label: "All Pages"
+        label: "Website Pages"
         file: "content/pages.json"
         format: "json"
         fields:
-          - label: "Home"
+          # --- HOME PAGE ---
+          - label: "🏠 Home Page Hero"
             name: "home"
             widget: "object"
             fields:
-              - { label: "Badge Text", name: "badgeText", widget: "string" }
+              - { label: "Badge Text", name: "badgeText", widget: "string", hint: "Small text above the headline." }
               - { label: "Headline Line 1", name: "headline1", widget: "string" }
-              - { label: "Headline Emphasis", name: "headlineEmphasis", widget: "string" }
+              - { label: "Headline Emphasis", name: "headlineEmphasis", widget: "string", hint: "The part of the headline that is highlighted/italicized." }
               - { label: "Headline Line 3", name: "headline3", widget: "string" }
               - { label: "Subheadline", name: "subheadline", widget: "text" }
               - { label: "Primary CTA Label", name: "primaryCtaLabel", widget: "string" }
@@ -44,11 +53,13 @@ collections:
               - label: "Stat Cards"
                 name: "stats"
                 widget: "list"
+                summary: '{{fields.label}}: {{fields.value}}'
                 fields:
                   - { label: "Label", name: "label", widget: "string" }
                   - { label: "Value", name: "value", widget: "string" }
 
-          - label: "Technology"
+          # --- TECHNOLOGY PAGE ---
+          - label: "⚡ Technology Section"
             name: "technology"
             widget: "object"
             fields:
@@ -60,36 +71,33 @@ collections:
               - label: "Feature Cards"
                 name: "features"
                 widget: "list"
+                summary: '{{fields.title}}'
                 fields:
-                  - { label: "Icon", name: "icon", widget: "string" }
+                  - { label: "Icon Name", name: "icon", widget: "string", hint: "e.g., 'bolt', 'shield', 'cpu'" }
                   - { label: "Title", name: "title", widget: "string" }
-                  - { label: "Body", name: "body", widget: "string" }
+                  - { label: "Body Text", name: "body", widget: "string" }
 
-          - label: "Specs"
+          # --- SPECS PAGE ---
+          - label: "📊 Product Specifications"
             name: "specs"
             widget: "object"
             fields:
               - { label: "Page Title", name: "title", widget: "string" }
-              - label: "Table Rows"
+              - label: "Comparison Table Rows"
                 name: "rows"
                 widget: "list"
+                summary: '{{fields.parameter}}'
                 fields:
-                  - { label: "Parameter", name: "parameter", widget: "string" }
-                  - { label: "PowerPod 250", name: "pp250", widget: "string" }
-                  - { label: "PowerPod 1000", name: "pp1000", widget: "string" }
+                  - { label: "Parameter Name", name: "parameter", widget: "string" }
+                  - { label: "PowerPod 250 Value", name: "pp250", widget: "string" }
+                  - { label: "PowerPod 1000 Value", name: "pp1000", widget: "string" }
               - { label: "Bottom Button Label", name: "buttonLabel", widget: "string" }
 
-          - label: "Generic Pages"
+          # --- GENERIC CONTENT ---
+          - label: "📝 Standard Page Copy"
             name: "generic"
             widget: "object"
             fields:
-              - { label: "Solutions Title", name: "solutionsTitle", widget: "string" }
-              - { label: "Solutions Body", name: "solutionsBody", widget: "text" }
-              - { label: "Company Title", name: "companyTitle", widget: "string" }
-              - { label: "Company Body", name: "companyBody", widget: "text" }
-              - { label: "Contact Title", name: "contactTitle", widget: "string" }
-              - { label: "Contact Body", name: "contactBody", widget: "text" }
-              - { label: "Safety Title", name: "safetyTitle", widget: "string" }
-              - { label: "Safety Body", name: "safetyBody", widget: "text" }
-              - { label: "Tax Title", name: "taxTitle", widget: "string" }
-              - { label: "Tax Body", name: "taxBody", widget: "text" }
+              - { label: "Solutions Body", name: "solutionsBody", widget: "markdown" }
+              - { label: "Company Body", name: "companyBody", widget: "markdown" }
+              - { label: "Contact Body", name: "contactBody", widget: "markdown" }

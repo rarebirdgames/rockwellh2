@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rockwell H2 | Industrial Hydrogen Infrastructure</title>
+    <title id="site-title-meta">Rockwell H2 | Industrial Hydrogen Infrastructure</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     
@@ -17,19 +17,20 @@
             background-color: #0a0f0d;
             color: #f8fafc;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
         .mono { font-family: 'JetBrains Mono', monospace; }
         
         /* Smooth page transitions */
         .page {
             display: none;
-            animation: fadeIn 0.4s ease-out forwards;
+            animation: pageFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
         .page.active {
             display: block;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+        @keyframes pageFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -44,33 +45,50 @@
             filter: blur(1px);
         }
 
-        .glass {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .glass-panel:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(16, 185, 129, 0.3);
         }
 
         .logo-container {
             user-select: none;
             -webkit-user-select: none;
-            -ms-user-select: none;
-            outline: none;
-        }
-        .logo-container:focus {
             outline: none;
         }
 
-        ::-webkit-scrollbar { width: 8px; }
+        /* Prevent Clipping on Italic Clipped Text */
+        .hero-title-clip {
+            padding-bottom: 0.1em;
+            line-height: 1.15;
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #0a0f0d; }
-        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #10b981; }
+
+        .btn-primary {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.4);
+        }
     </style>
 </head>
 <body>
 
     <!-- WebGL Background Layer (Z-0) -->
     <canvas id="bg-canvas"></canvas>
-    <div class="fixed inset-0 z-[1] bg-gradient-to-b from-transparent via-[#0a0f0d]/30 to-[#0a0f0d] pointer-events-none"></div>
+    <div class="fixed inset-0 z-[1] bg-gradient-to-b from-transparent via-[#0a0f0d]/40 to-[#0a0f0d] pointer-events-none"></div>
 
     <!-- Content Layer (Z-10) -->
     <div class="relative z-10 flex flex-col min-h-screen">
@@ -78,45 +96,45 @@
         <!-- Navigation -->
         <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-white/10">
             <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-                <div class="logo-container flex items-center space-x-2 cursor-pointer group" onclick="navTo('home')" tabindex="0">
-                    <img id="site-logo" class="h-8 w-auto hidden" alt="Rockwell H2 logo">
-                    <div id="site-logo-fallback" class="w-8 h-8 bg-emerald-600 flex items-center justify-center text-white font-bold rounded group-hover:bg-emerald-500 transition-colors">R</div>
+                <div class="logo-container flex items-center space-x-3 cursor-pointer group" onclick="navTo('home')" tabindex="0">
+                    <img id="site-logo" class="h-9 w-auto hidden" alt="Rockwell H2 logo">
+                    <div id="site-logo-fallback" class="w-9 h-9 bg-emerald-600 flex items-center justify-center text-white font-bold rounded-lg shadow-lg group-hover:bg-emerald-500 transition-colors">R</div>
                     <span id="site-title" class="text-xl font-bold tracking-tight text-slate-900 uppercase">Rockwell <span class="text-emerald-600">H2</span></span>
                 </div>
                 
-                <div class="hidden lg:flex items-center space-x-8 text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500">
+                <div class="hidden lg:flex items-center space-x-10 text-[11px] font-bold uppercase tracking-[0.25em] text-slate-500">
                     <div class="relative group">
-                        <button class="hover:text-emerald-600 transition flex items-center">
-                            Technology <i data-lucide="chevron-down" class="ml-1 w-3 h-3"></i>
+                        <button class="hover:text-emerald-600 transition flex items-center py-8">
+                            Technology <i data-lucide="chevron-down" class="ml-1.5 w-3 h-3"></i>
                         </button>
-                        <div class="absolute hidden group-hover:block w-56 bg-white border border-gray-100 shadow-2xl top-full -left-4 py-2 rounded-lg">
-                            <button onclick="navTo('technology')" class="block w-full text-left px-4 py-3 hover:bg-emerald-50 hover:text-emerald-600 transition">Conceptual Overview</button>
-                            <button onclick="navTo('specs')" class="block w-full text-left px-4 py-3 hover:bg-emerald-50 hover:text-emerald-600 transition">Technical Specs</button>
+                        <div class="absolute hidden group-hover:block w-64 bg-white border border-gray-100 shadow-2xl top-[75px] -left-8 py-3 rounded-xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                            <button onclick="navTo('technology')" class="block w-full text-left px-6 py-4 hover:bg-emerald-50 hover:text-emerald-600 transition font-bold uppercase tracking-widest text-[10px]">Conceptual Overview</button>
+                            <button onclick="navTo('specs')" class="block w-full text-left px-6 py-4 hover:bg-emerald-50 hover:text-emerald-600 transition font-bold uppercase tracking-widest text-[10px]">Technical Specs</button>
                         </div>
                     </div>
-                    <button onclick="navTo('solutions')" class="hover:text-emerald-600 transition">Solutions</button>
-                    <button onclick="navTo('company')" class="hover:text-emerald-600 transition">Company</button>
-                    <button onclick="navTo('contact')" class="hover:text-emerald-600 transition">Contact</button>
+                    <button onclick="navTo('solutions')" class="hover:text-emerald-600 transition py-8">Solutions</button>
+                    <button onclick="navTo('company')" class="hover:text-emerald-600 transition py-8">Company</button>
+                    <button onclick="navTo('contact')" class="hover:text-emerald-600 transition py-8">Contact</button>
                 </div>
 
                 <div class="flex items-center space-x-4">
-                    <button onclick="toggleModal(true)" class="hidden sm:block bg-emerald-600 text-white px-6 py-2.5 rounded-full text-[10px] font-bold hover:bg-emerald-500 transition-all uppercase tracking-widest shadow-lg shadow-emerald-900/20">
+                    <button onclick="toggleModal(true)" class="btn-primary hidden sm:block bg-emerald-600 text-white px-7 py-3 rounded-full text-[10px] font-bold hover:bg-emerald-500 transition-all uppercase tracking-widest shadow-lg shadow-emerald-900/20">
                         Speak with an Engineer
                     </button>
-                    <button class="lg:hidden text-slate-900" onclick="toggleMobileMenu()">
+                    <button class="lg:hidden text-slate-900 p-2" onclick="toggleMobileMenu()">
                         <i data-lucide="menu" id="menu-icon"></i>
                     </button>
                 </div>
             </div>
 
             <!-- Mobile Menu -->
-            <div id="mobile-menu" class="hidden lg:hidden bg-white/95 border-b border-gray-200 py-8 px-6 flex flex-col space-y-6 font-bold uppercase tracking-widest text-xs text-slate-600">
-                <button onclick="navTo('technology')" class="text-left border-b border-gray-100 pb-2">Technology Overview</button>
-                <button onclick="navTo('specs')" class="text-left border-b border-gray-100 pb-2">Technical Specs</button>
-                <button onclick="navTo('solutions')" class="text-left border-b border-gray-100 pb-2">Solutions</button>
-                <button onclick="navTo('company')" class="text-left border-b border-gray-100 pb-2">Company</button>
-                <button onclick="navTo('contact')" class="text-left border-b border-gray-100 pb-2">Contact</button>
-                <button onclick="toggleModal(true)" class="w-full bg-emerald-600 text-white py-4 rounded-full text-center uppercase tracking-widest text-[10px] font-bold">Speak with an Engineer</button>
+            <div id="mobile-menu" class="hidden lg:hidden bg-white border-b border-gray-200 py-8 px-8 flex flex-col space-y-6 font-bold uppercase tracking-widest text-xs text-slate-600">
+                <button onclick="navTo('technology')" class="text-left border-b border-gray-100 pb-4">Technology Overview</button>
+                <button onclick="navTo('specs')" class="text-left border-b border-gray-100 pb-4">Technical Specs</button>
+                <button onclick="navTo('solutions')" class="text-left border-b border-gray-100 pb-4">Solutions</button>
+                <button onclick="navTo('company')" class="text-left border-b border-gray-100 pb-4">Company</button>
+                <button onclick="navTo('contact')" class="text-left border-b border-gray-100 pb-4">Contact</button>
+                <button onclick="toggleModal(true)" class="w-full bg-emerald-600 text-white py-5 rounded-xl text-center uppercase tracking-widest text-[11px] font-bold">Speak with an Engineer</button>
             </div>
         </nav>
 
@@ -125,49 +143,53 @@
             
             <!-- HOME PAGE -->
             <section id="page-home" class="page active">
-                <div class="relative h-[90vh] flex items-center">
+                <div class="relative min-h-[85vh] flex items-center py-20">
                     <div class="max-w-7xl mx-auto px-6 relative z-20">
                         <div class="max-w-4xl">
-                            <div class="inline-flex items-center space-x-3 mb-8 bg-emerald-500/10 border border-emerald-500/20 px-4 py-2 rounded-full">
+                            <div class="inline-flex items-center space-x-3 mb-10 bg-emerald-500/10 border border-emerald-500/20 px-5 py-2.5 rounded-full backdrop-blur-md">
                                 <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
-                                <span id="home-badge" class="mono text-emerald-400 uppercase tracking-[0.2em] text-[10px] font-bold">Q4 Infrastructure Update</span>
+                                <span id="home-badge" class="mono text-emerald-400 uppercase tracking-[0.2em] text-[11px] font-bold">Infrastructure Excellence</span>
                             </div>
-                            <h1 class="text-5xl md:text-8xl font-bold mb-10 leading-[0.9] uppercase tracking-tighter text-white">
-                                <span id="home-h1-1">Industrial</span><br />
-                                <span id="home-h1-2" class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-emerald-600 italic">Hydrogen</span><br />
-                                <span id="home-h1-3">Resilience.</span>
+                            <h1 class="text-6xl md:text-8xl font-bold mb-10 leading-[1.1] uppercase tracking-tight text-white hero-title-clip">
+                                <span id="home-h1-1" class="block">Industrial</span>
+                                <span id="home-h1-2" class="inline-block text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-emerald-600 italic py-1">Hydrogen</span>
+                                <span id="home-h1-3" class="block">Resilience.</span>
                             </h1>
                             <p id="home-subheadline" class="text-xl md:text-2xl text-slate-400 mb-14 leading-relaxed max-w-2xl font-light">
-                                Integrated production, storage, and dispensing infrastructure designed for warehouse logistics and heavy transport.
+                                Integrated hardware loops for green hydrogen production, high-pressure storage, and high-volume industrial dispensing.
                             </p>
-                            <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-8">
-                                <button onclick="navTo('specs')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-12 py-5 rounded-full font-bold transition-all flex items-center justify-center uppercase text-[11px] tracking-[0.2em] shadow-xl shadow-emerald-900/40">
-                                    <span id="home-cta-primary">Technical Datasheet</span> <i data-lucide="arrow-right" class="ml-3 w-4 h-4"></i>
+                            <div class="flex flex-col sm:flex-row space-y-5 sm:space-y-0 sm:space-x-8">
+                                <button onclick="navTo('specs')" class="btn-primary bg-emerald-600 hover:bg-emerald-500 text-white px-12 py-5 rounded-full font-bold transition-all flex items-center justify-center uppercase text-[11px] tracking-[0.2em] shadow-xl shadow-emerald-900/40">
+                                    <span id="home-cta-primary">System Specs</span> <i data-lucide="arrow-right" class="ml-3 w-4 h-4"></i>
                                 </button>
                                 <button onclick="toggleModal(true)" class="bg-white/5 backdrop-blur-md border border-white/20 hover:bg-white/10 text-white px-12 py-5 rounded-full font-bold transition uppercase text-[11px] tracking-[0.2em]">
-                                    <span id="home-cta-secondary">Request Site Evaluation</span>
+                                    <span id="home-cta-secondary">Request Feasibility</span>
                                 </button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="max-w-7xl mx-auto px-6 -mt-20 relative z-30 pb-24">
-                    <div id="home-stats" class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        <div class="glass p-8 rounded-2xl border border-white/10 group hover:border-emerald-500 transition-colors">
-                            <div class="text-emerald-500/60 uppercase tracking-widest text-[10px] font-bold mb-2 mono" id="home-stat-0-label">Daily Output</div>
-                            <div class="text-2xl font-bold text-white tracking-tight" id="home-stat-0-value">225 kg / Pod</div>
+                <div class="max-w-7xl mx-auto px-6 -mt-16 relative z-30 pb-32">
+                    <div id="home-stats" class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <div class="glass-panel p-10 rounded-[2rem]">
+                            <div class="text-emerald-500/60 uppercase tracking-widest text-[10px] font-bold mb-3 mono">Yield Capacity</div>
+                            <div class="text-3xl font-bold text-white tracking-tight">90–225 kg</div>
+                            <div class="text-[10px] text-slate-500 mt-1 uppercase font-bold tracking-widest">Per Pod / 24 Hours</div>
                         </div>
-                        <div class="glass p-8 rounded-2xl border border-white/10 group hover:border-emerald-500 transition-colors">
-                            <div class="text-emerald-500/60 uppercase tracking-widest text-[10px] font-bold mb-2 mono" id="home-stat-1-label">Refuel Time</div>
-                            <div class="text-2xl font-bold text-white tracking-tight" id="home-stat-1-value">3.5 Minutes</div>
+                        <div class="glass-panel p-10 rounded-[2rem]">
+                            <div class="text-emerald-500/60 uppercase tracking-widest text-[10px] font-bold mb-3 mono">Fiscal Credits</div>
+                            <div class="text-3xl font-bold text-white tracking-tight">$3.00 / kg</div>
+                            <div class="text-[10px] text-slate-500 mt-1 uppercase font-bold tracking-widest">45V PTC Optimized</div>
                         </div>
-                        <div class="glass p-8 rounded-2xl border border-white/10 group hover:border-emerald-500 transition-colors">
-                            <div class="text-emerald-500/60 uppercase tracking-widest text-[10px] font-bold mb-2 mono" id="home-stat-2-label">Purity Grade</div>
-                            <div class="text-2xl font-bold text-white tracking-tight" id="home-stat-2-value">99.999%</div>
+                        <div class="glass-panel p-10 rounded-[2rem]">
+                            <div class="text-emerald-500/60 uppercase tracking-widest text-[10px] font-bold mb-3 mono">Fleet Refuel</div>
+                            <div class="text-3xl font-bold text-white tracking-tight">3.5 Mins</div>
+                            <div class="text-[10px] text-slate-500 mt-1 uppercase font-bold tracking-widest">Average Turnaround</div>
                         </div>
-                        <div class="glass p-8 rounded-2xl border border-white/10 group hover:border-emerald-500 transition-colors">
-                            <div class="text-emerald-500/60 uppercase tracking-widest text-[10px] font-bold mb-2 mono" id="home-stat-3-label">Tax Incentives</div>
-                            <div class="text-2xl font-bold text-white tracking-tight" id="home-stat-3-value">45V Optimized</div>
+                        <div class="glass-panel p-10 rounded-[2rem]">
+                            <div class="text-emerald-500/60 uppercase tracking-widest text-[10px] font-bold mb-3 mono">Project ITC</div>
+                            <div class="text-3xl font-bold text-white tracking-tight">30%</div>
+                            <div class="text-[10px] text-slate-500 mt-1 uppercase font-bold tracking-widest">Investment Credit</div>
                         </div>
                     </div>
                 </div>
@@ -176,29 +198,34 @@
             <!-- TECHNOLOGY PAGE -->
             <section id="page-technology" class="page">
                 <div class="py-32 max-w-7xl mx-auto px-6">
-                    <h1 id="tech-title" class="text-6xl font-bold text-white uppercase tracking-tight mb-12">Hydrogen Approach</h1>
-                    <div class="bg-white rounded-[3rem] p-12 md:p-24 text-slate-900">
-                        <div class="grid lg:grid-cols-2 gap-20">
+                    <h1 id="tech-title" class="text-6xl md:text-8xl font-bold text-white uppercase tracking-tighter mb-16 leading-[0.9]">Hydrogen <br/><span class="text-emerald-500">Approach</span></h1>
+                    <div class="bg-white rounded-[3rem] p-12 md:p-24 text-slate-900 shadow-2xl relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-64 h-64 bg-emerald-50 rounded-full blur-3xl -mr-32 -mt-32 opacity-50"></div>
+                        <div class="grid lg:grid-cols-2 gap-24 relative z-10">
                             <div>
-                                <h2 id="tech-eyebrow" class="text-xs font-bold text-emerald-600 uppercase tracking-[0.4em] mb-6">System Loop</h2>
-                                <h3 id="tech-section-title" class="text-4xl font-bold mb-8 uppercase tracking-tight">Integrated Deployment</h3>
-                                <p id="tech-p1" class="text-slate-600 text-lg leading-relaxed mb-6">
-                                    Traditional hydrogen logistics suffer from high transport costs and energy loss. Rockwell H2 eliminates these variables by housing the entire production loop within a site-integrated footprint.
+                                <h2 id="tech-eyebrow" class="text-xs font-bold text-emerald-600 uppercase tracking-[0.4em] mb-8 border-b border-emerald-100 pb-4 inline-block">Architecture Loop</h2>
+                                <h3 id="tech-section-title" class="text-4xl md:text-5xl font-bold mb-10 uppercase tracking-tight leading-tight">Integrated Modular Deployment</h3>
+                                <p id="tech-p1" class="text-slate-600 text-xl leading-relaxed mb-10 font-light">
+                                    Traditional hydrogen logistics suffer from high transport costs and significant energy loss. Rockwell H2 Systems eliminates these variables by housing the entire hardware production loop within a site-integrated footprint.
                                 </p>
-                                <p id="tech-p2" class="text-slate-600 text-lg leading-relaxed">
-                                    Our PowerPods bridge the gap between intermittent renewable power and mission-critical work.
+                                <p id="tech-p2" class="text-slate-900 text-lg leading-relaxed font-semibold">
+                                    We bridge the gap between intermittent renewable energy and the heavy-duty power requirements of global industry.
                                 </p>
                             </div>
-                            <div id="tech-features" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div class="p-8 bg-slate-50 rounded-2xl border border-slate-100 shadow-sm">
-                                    <i data-lucide="settings" class="text-emerald-600 mb-4"></i>
-                                    <h4 class="font-bold text-[11px] uppercase tracking-widest mb-2">Modularity</h4>
-                                    <p class="text-xs text-slate-500 leading-relaxed">Stackable units from 250kW to 10MW+ capacity.</p>
+                            <div id="tech-features" class="grid grid-cols-1 gap-8">
+                                <div class="p-10 bg-slate-50 rounded-[2rem] border border-slate-100 group transition-all hover:bg-white hover:shadow-xl">
+                                    <div class="w-14 h-14 bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
+                                        <i data-lucide="settings" size={28}></i>
+                                    </div>
+                                    <h4 class="font-bold text-lg uppercase tracking-tight mb-3">Modular Pod Series</h4>
+                                    <p class="text-slate-500 leading-relaxed font-medium">Stackable units from 200kW to 10MW+ capacity. Rapid deployment in days, not months.</p>
                                 </div>
-                                <div class="p-8 bg-slate-50 rounded-2xl border border-slate-100 shadow-sm">
-                                    <i data-lucide="zap" class="text-emerald-600 mb-4"></i>
-                                    <h4 class="font-bold text-[11px] uppercase tracking-widest mb-2">Efficiency</h4>
-                                    <p class="text-xs text-slate-500 leading-relaxed">Optimized for low-carbon intensity (CI) scores.</p>
+                                <div class="p-10 bg-slate-50 rounded-[2rem] border border-slate-100 group transition-all hover:bg-white hover:shadow-xl">
+                                    <div class="w-14 h-14 bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
+                                        <i data-lucide="zap" size={28}></i>
+                                    </div>
+                                    <h4 class="font-bold text-lg uppercase tracking-tight mb-3">Efficiency Optimization</h4>
+                                    <p class="text-slate-500 leading-relaxed font-medium">Zero-loss gaseous storage for seasonal energy balancing and high-purity dispatch.</p>
                                 </div>
                             </div>
                         </div>
@@ -209,37 +236,48 @@
             <!-- SPECS PAGE -->
             <section id="page-specs" class="page">
                 <div class="py-32 max-w-7xl mx-auto px-6">
-                    <h1 id="specs-title" class="text-6xl font-bold text-white uppercase tracking-tight mb-12">Engineering Specs</h1>
-                    <div class="bg-white rounded-[3rem] p-8 md:p-16 text-slate-900 overflow-hidden shadow-2xl">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="border-b-2 border-slate-900 text-[10px] uppercase tracking-[0.2em] font-bold text-slate-400">
-                                    <th class="py-6">Parameter</th>
-                                    <th class="py-6">PowerPod 250</th>
-                                    <th class="py-6">PowerPod 1000</th>
-                                </tr>
-                            </thead>
-                            <tbody id="specs-rows" class="text-sm font-medium">
-                                <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
-                                    <td class="py-6 text-slate-400 uppercase text-[10px] font-bold">H2 Output</td>
-                                    <td class="py-6 text-slate-700">90 - 225 kg/Day</td>
-                                    <td class="py-6 text-slate-700">450 - 1,000 kg/Day</td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
-                                    <td class="py-6 text-slate-400 uppercase text-[10px] font-bold">Max Pressure</td>
-                                    <td class="py-6 text-slate-700">450 Bar</td>
-                                    <td class="py-6 text-slate-700">700 Bar</td>
-                                </tr>
-                                <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
-                                    <td class="py-6 text-slate-400 uppercase text-[10px] font-bold">Power Input</td>
-                                    <td class="py-6 text-slate-700">250 kW AC</td>
-                                    <td class="py-6 text-slate-700">1 MW+ AC/DC</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="mt-12 text-center">
-                            <button onclick="toggleModal(true)" class="bg-emerald-600 text-white px-10 py-4 rounded-full text-[10px] font-bold uppercase tracking-widest shadow-xl">
-                                <span id="specs-button-label">Request Full Datasheet</span>
+                    <h1 id="specs-title" class="text-6xl md:text-8xl font-bold text-white uppercase tracking-tighter mb-16 leading-[0.9]">Technical <br/><span class="text-emerald-500">Specs</span></h1>
+                    <div class="bg-white rounded-[3rem] p-10 md:p-20 text-slate-900 shadow-2xl">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="border-b-2 border-slate-900 text-[11px] uppercase tracking-[0.3em] font-bold text-slate-400">
+                                        <th class="py-8 px-4">System Parameter</th>
+                                        <th class="py-8 px-4">PowerPod 200 (Standard)</th>
+                                        <th class="py-8 px-4 text-emerald-700">PowerPod 1000 (Giga)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="specs-rows" class="text-sm">
+                                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                                        <td class="py-7 px-4 text-slate-400 uppercase text-[10px] font-bold tracking-widest">Stack Output</td>
+                                        <td class="py-7 px-4 font-semibold text-slate-800">90 – 225 kg / Day</td>
+                                        <td class="py-7 px-4 font-bold text-emerald-700">Up to 1,200 kg / Day</td>
+                                    </tr>
+                                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                                        <td class="py-7 px-4 text-slate-400 uppercase text-[10px] font-bold tracking-widest">Operating Pressure</td>
+                                        <td class="py-7 px-4 font-semibold text-slate-800">450 Bar (Type III)</td>
+                                        <td class="py-7 px-4 font-bold text-emerald-700">700 Bar (Type IV)</td>
+                                    </tr>
+                                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                                        <td class="py-7 px-4 text-slate-400 uppercase text-[10px] font-bold tracking-widest">Grid Load</td>
+                                        <td class="py-7 px-4 font-semibold text-slate-800">200 kW Integrated</td>
+                                        <td class="py-7 px-4 font-bold text-emerald-700">1,000 kW+ Modular</td>
+                                    </tr>
+                                    <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                                        <td class="py-7 px-4 text-slate-400 uppercase text-[10px] font-bold tracking-widest">Gas Purity</td>
+                                        <td class="py-7 px-4 font-semibold text-slate-800">99.999% (ISO 14687)</td>
+                                        <td class="py-7 px-4 font-bold text-emerald-700">99.999% (Fuel Cell Grade)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="mt-20 flex flex-col md:flex-row items-center justify-between gap-10 bg-slate-950 p-12 rounded-[2rem] text-white">
+                            <div class="max-w-xl">
+                                <h4 class="text-2xl font-bold uppercase tracking-tight mb-4">Request Comprehensive Datasheet</h4>
+                                <p class="text-slate-400 text-sm leading-relaxed">Access full site preparation requirements, P&ID diagrams, and electrical integration protocols.</p>
+                            </div>
+                            <button onclick="toggleModal(true)" class="btn-primary whitespace-nowrap bg-emerald-600 text-white px-12 py-5 rounded-full font-bold uppercase tracking-widest text-[11px] shadow-2xl">
+                                <span id="specs-button-label">Get Technical Data</span>
                             </button>
                         </div>
                     </div>
@@ -248,10 +286,10 @@
 
             <!-- GENERIC/CMS PAGES -->
             <section id="page-generic" class="page">
-                <div class="py-32 max-w-4xl mx-auto px-6">
-                    <h1 id="generic-title" class="text-5xl font-bold text-white uppercase tracking-tight mb-8">Page Title</h1>
-                    <div class="bg-white/95 backdrop-blur-2xl p-12 md:p-20 rounded-[3rem] text-slate-800 shadow-2xl">
-                        <p id="generic-content" class="text-xl leading-relaxed font-light whitespace-pre-line"></p>
+                <div class="py-32 max-w-5xl mx-auto px-6">
+                    <h1 id="generic-title" class="text-6xl font-bold text-white uppercase tracking-tighter mb-16 leading-none"></h1>
+                    <div class="bg-white/95 backdrop-blur-2xl p-16 md:p-24 rounded-[3.5rem] text-slate-800 shadow-2xl">
+                        <p id="generic-content" class="text-2xl leading-relaxed font-light text-slate-600 whitespace-pre-line"></p>
                     </div>
                 </div>
             </section>
@@ -259,93 +297,108 @@
         </main>
 
         <!-- Footer -->
-        <footer class="bg-slate-950/90 text-white pt-24 pb-12 border-t border-white/5 relative z-10">
-            <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
-                <div>
-                    <div class="flex items-center space-x-2 mb-8 logo-container cursor-pointer" onclick="navTo('home')">
-                        <div class="w-8 h-8 bg-emerald-600 flex items-center justify-center text-white font-bold rounded">R</div>
-                        <span class="site-title-target text-xl font-bold tracking-tight uppercase">Rockwell <span class="text-emerald-500">H2</span></span>
+        <footer class="bg-slate-950/95 text-white pt-32 pb-16 border-t border-white/5 relative z-10">
+            <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-16 mb-24">
+                <div class="col-span-1 md:col-span-1">
+                    <div class="flex items-center space-x-3 mb-10 logo-container cursor-pointer" onclick="navTo('home')">
+                        <div class="w-9 h-9 bg-emerald-600 flex items-center justify-center text-white font-bold rounded-lg shadow-lg">R</div>
+                        <span class="site-title-target text-xl font-bold tracking-tight uppercase">Rockwell H2</span>
                     </div>
-                    <p id="footer-description" class="text-sm text-slate-400 leading-relaxed mb-8 text-slate-400">
-                        Accelerating the industrial transition through high-pressure hydrogen infrastructure and modular PowerPod technology.
+                    <p id="footer-description" class="text-sm text-slate-500 leading-loose mb-10">
+                        Pioneering modular hydrogen infrastructure for industrial decarbonization. Focused on resilience, engineering integrity, and energy transition assets.
                     </p>
-                    <div class="flex space-x-6">
-                        <a id="social-linkedin" href="https://www.linkedin.com/company/rockwell-h2-solutions/posts/?feedView=all" target="_blank" class="text-slate-500 hover:text-emerald-400 transition-colors">
-                            <i data-lucide="linkedin"></i>
+                    <div class="flex space-x-8">
+                        <a id="social-linkedin" href="https://www.linkedin.com/company/rockwell-h2-solutions" target="_blank" class="text-slate-600 hover:text-emerald-400 transition-colors">
+                            <i data-lucide="linkedin" size={22}></i>
                         </a>
-                        <a id="social-instagram" href="https://www.instagram.com/rockwellh2systems/" target="_blank" class="text-slate-500 hover:text-emerald-400 transition-colors">
-                            <i data-lucide="instagram"></i>
+                        <a id="social-instagram" href="https://www.instagram.com/rockwellh2systems/" target="_blank" class="text-slate-600 hover:text-emerald-400 transition-colors">
+                            <i data-lucide="instagram" size={22}></i>
                         </a>
                     </div>
                 </div>
 
                 <div>
-                    <h4 class="font-bold uppercase text-[10px] tracking-[0.25em] mb-8 text-emerald-500/80">Systems</h4>
-                    <ul class="text-xs space-y-5 text-slate-400 font-medium">
-                        <li><button onclick="navTo('technology')" class="hover:text-emerald-400 transition">Technology Approach</button></li>
+                    <h4 class="font-bold uppercase text-[10px] tracking-[0.3em] mb-10 text-emerald-500/80">Systems</h4>
+                    <ul class="text-xs space-y-6 text-slate-500 font-medium">
+                        <li><button onclick="navTo('technology')" class="hover:text-emerald-400 transition">Conceptual Framework</button></li>
                         <li><button onclick="navTo('specs')" class="hover:text-emerald-400 transition">Engineering Specs</button></li>
-                        <li><button onclick="navTo('solutions')" class="hover:text-emerald-400 transition">Use Cases</button></li>
+                        <li><button onclick="navTo('solutions')" class="hover:text-emerald-400 transition">Primary Use Cases</button></li>
+                        <li><button onclick="navTo('tax')" class="hover:text-emerald-400 transition">IRA 45V Incentives</button></li>
                     </ul>
                 </div>
 
                 <div>
-                    <h4 class="font-bold uppercase text-[10px] tracking-[0.25em] mb-8 text-emerald-500/80">Corporate</h4>
-                    <ul class="text-xs space-y-5 text-slate-400 font-medium">
+                    <h4 class="font-bold uppercase text-[10px] tracking-[0.3em] mb-10 text-emerald-500/80">Corporate</h4>
+                    <ul class="text-xs space-y-6 text-slate-500 font-medium">
                         <li><button onclick="navTo('company')" class="hover:text-emerald-400 transition">Company Background</button></li>
-                        <li><button onclick="navTo('safety')" class="hover:text-emerald-400 transition">Safety Standards</button></li>
-                        <li><button onclick="navTo('contact')" class="hover:text-emerald-400 transition">Partnership Path</button></li>
-                        <li><button onclick="navTo('tax')" class="hover:text-emerald-400 transition">Tax Credits (45V)</button></li>
+                        <li><button onclick="navTo('safety')" class="hover:text-emerald-400 transition">Safety Protocols</button></li>
+                        <li><button onclick="navTo('contact')" class="hover:text-emerald-400 transition">Inquiry Routing</button></li>
                     </ul>
                 </div>
 
                 <div>
-                    <h4 class="font-bold uppercase text-[10px] tracking-[0.25em] mb-8 text-emerald-500/80">HQ</h4>
-                    <p id="footer-hq" class="text-xs text-slate-400 leading-loose whitespace-pre-line">Rockwell H2 Systems\nInfrastructure Hub\nSanta Ana, California</p>
+                    <h4 class="font-bold uppercase text-[10px] tracking-[0.3em] mb-10 text-emerald-500/80">Headquarters</h4>
+                    <p id="footer-hq" class="text-xs text-slate-500 leading-loose whitespace-pre-line font-medium">
+                        Rockwell H2 Solutions<br />
+                        Engineering Hub<br />
+                        Santa Ana, California
+                    </p>
                 </div>
             </div>
-            <div class="max-w-7xl mx-auto px-6 border-t border-white/5 pt-12 text-[10px] font-bold tracking-[0.1em] text-slate-600 flex flex-col md:flex-row justify-between uppercase">
-                <span>© 2024 Rockwell H2 Solutions. Built for Industrial Resilience.</span>
-                <span class="text-emerald-900">v7.2.0 Decap Ready</span>
+            <div class="max-w-7xl mx-auto px-6 border-t border-white/5 pt-16 text-[10px] font-bold tracking-[0.2em] text-slate-700 flex flex-col md:flex-row justify-between uppercase">
+                <span>© 2026 Rockwell Engineering and Equipment.</span>
+                <span class="text-emerald-900 mt-4 md:mt-0">v7.5.0 Clean Tech Architecture</span>
             </div>
         </footer>
     </div>
 
     <!-- Engineering Modal -->
     <div id="modal-container" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-md" onclick="toggleModal(false)"></div>
-        <div class="bg-white w-full max-w-xl rounded-2xl shadow-2xl overflow-hidden relative z-10">
-            <div id="modal-content" class="p-8 md:p-12 text-slate-900">
+        <div class="absolute inset-0 bg-slate-950/90 backdrop-blur-md" onclick="toggleModal(false)"></div>
+        <div class="bg-white w-full max-w-xl rounded-[2.5rem] shadow-2xl overflow-hidden relative z-10 animate-in zoom-in-95 duration-300">
+            <div id="modal-content" class="p-10 md:p-16 text-slate-900">
                 <div id="modal-step-1" class="modal-step">
-                    <div class="flex justify-between items-start mb-8">
+                    <div class="flex justify-between items-start mb-10">
                         <div>
-                            <h2 class="text-2xl font-bold mb-1 uppercase tracking-tight">Speak with an Engineer</h2>
-                            <p class="text-sm text-slate-500 font-medium">Direct routing to technical leads.</p>
+                            <h2 class="text-3xl font-bold mb-2 uppercase tracking-tight">Technical Inquiry</h2>
+                            <p class="text-sm text-slate-500 font-medium">Route your brief to the correct engineering lead.</p>
                         </div>
-                        <button onclick="toggleModal(false)" class="p-2 hover:bg-slate-100 rounded-full transition"><i data-lucide="x"></i></button>
+                        <button onclick="toggleModal(false)" class="p-3 hover:bg-slate-100 rounded-full transition text-slate-400 hover:text-slate-900"><i data-lucide="x"></i></button>
                     </div>
-                    <div class="space-y-4">
-                        <button onclick="goToForm('Project Evaluation')" class="w-full flex items-center justify-between p-5 border border-slate-100 rounded-xl hover:border-emerald-600 hover:bg-emerald-50 transition-all text-left">
+                    <div class="grid grid-cols-1 gap-4">
+                        <button onclick="goToForm('Project Evaluation')" class="group w-full flex items-center justify-between p-6 border border-slate-100 rounded-2xl hover:border-emerald-600 hover:bg-emerald-50 transition-all text-left">
                             <span class="font-bold text-slate-700 uppercase tracking-widest text-[11px]">Project Evaluation</span>
-                            <i data-lucide="arrow-right" class="text-slate-300"></i>
+                            <i data-lucide="arrow-right" class="text-slate-300 group-hover:text-emerald-600 transition-transform group-hover:translate-x-1"></i>
+                        </button>
+                        <button onclick="goToForm('Technical Integration')" class="group w-full flex items-center justify-between p-6 border border-slate-100 rounded-2xl hover:border-emerald-600 hover:bg-emerald-50 transition-all text-left">
+                            <span class="font-bold text-slate-700 uppercase tracking-widest text-[11px]">Technical Integration</span>
+                            <i data-lucide="arrow-right" class="text-slate-300 group-hover:text-emerald-600 transition-transform group-hover:translate-x-1"></i>
                         </button>
                     </div>
                 </div>
                 <div id="modal-step-2" class="modal-step hidden">
-                    <form onsubmit="handleForm(event)" class="space-y-4">
-                        <input required type="text" placeholder="Full Name" class="w-full bg-slate-50 border border-slate-200 p-3 rounded-lg outline-none focus:border-emerald-600">
-                        <input required type="text" placeholder="Organization" class="w-full bg-slate-50 border border-slate-200 p-3 rounded-lg outline-none focus:border-emerald-600">
-                        <input required type="email" placeholder="Work Email" class="w-full bg-slate-50 border border-slate-200 p-3 rounded-lg outline-none focus:border-emerald-600">
-                        <textarea required placeholder="Site constraints or technical context..." class="w-full bg-slate-50 border border-slate-200 p-3 rounded-lg outline-none focus:border-emerald-600 h-24"></textarea>
-                        <div class="flex justify-between items-center pt-4">
-                            <button type="button" onclick="goToStep(1)" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest hover:text-slate-600 transition">Back</button>
-                            <button type="submit" class="bg-emerald-600 text-white px-10 py-4 rounded-full font-bold text-[10px] tracking-widest uppercase shadow-lg">Submit Brief</button>
+                    <div class="mb-10">
+                        <h2 class="text-3xl font-bold mb-2 uppercase tracking-tight leading-none">Engineering Brief</h2>
+                        <p id="form-type-label" class="text-emerald-600 font-bold uppercase tracking-widest text-[10px]"></p>
+                    </div>
+                    <form onsubmit="handleForm(event)" class="space-y-5">
+                        <input required type="text" placeholder="Full Name" class="w-full bg-slate-50 border border-slate-200 p-4 rounded-xl outline-none focus:border-emerald-600 focus:bg-white transition shadow-inner">
+                        <input required type="text" placeholder="Organization" class="w-full bg-slate-50 border border-slate-200 p-4 rounded-xl outline-none focus:border-emerald-600 focus:bg-white transition shadow-inner">
+                        <input required type="email" placeholder="Work Email" class="w-full bg-slate-50 border border-slate-200 p-4 rounded-xl outline-none focus:border-emerald-600 focus:bg-white transition shadow-inner">
+                        <textarea required placeholder="Site constraints or project context..." class="w-full bg-slate-50 border border-slate-200 p-4 rounded-xl outline-none focus:border-emerald-600 focus:bg-white transition h-32 shadow-inner"></textarea>
+                        <div class="flex justify-between items-center pt-6">
+                            <button type="button" onclick="goToStep(1)" class="text-[11px] font-bold text-slate-400 uppercase tracking-widest hover:text-slate-600 transition">Back</button>
+                            <button type="submit" class="btn-primary bg-emerald-600 text-white px-12 py-5 rounded-full font-bold text-[11px] tracking-widest uppercase shadow-xl">Submit Brief</button>
                         </div>
                     </form>
                 </div>
                 <div id="modal-step-3" class="modal-step hidden text-center py-10">
-                    <i data-lucide="check-circle" class="mx-auto text-emerald-600 mb-6" size="48"></i>
-                    <h3 class="text-2xl font-bold uppercase tracking-tight">Brief Received</h3>
-                    <button onclick="toggleModal(false)" class="mt-10 bg-slate-900 text-white px-12 py-4 rounded-full text-[10px] font-bold uppercase tracking-widest">Close</button>
+                    <div class="w-20 h-20 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-8">
+                         <i data-lucide="check-circle" size={40}></i>
+                    </div>
+                    <h3 class="text-3xl font-bold uppercase tracking-tight text-slate-900">Success</h3>
+                    <p class="text-slate-500 mt-4 leading-relaxed max-w-xs mx-auto font-medium">Your inquiry has been logged. Our technical project lead will respond within 48 hours.</p>
+                    <button onclick="toggleModal(false)" class="mt-12 bg-slate-900 text-white px-14 py-5 rounded-full text-[11px] font-bold uppercase tracking-widest hover:bg-slate-800 transition shadow-xl">Close</button>
                 </div>
             </div>
         </div>
@@ -384,17 +437,17 @@
                 float dim = min(u_resolution.x, u_resolution.y);
                 vec2 pos = (fragCoord.xy - 0.5 * u_resolution.xy) / dim;
 
-                float p = mod(u_time, 12.0) / 12.0;
+                float p = mod(u_time, 15.0) / 15.0;
                 float w1 = exp(-40.0 * pow(p - 0.0, 2.0)) + exp(-40.0 * pow(p - 1.0, 2.0));
-                float w2 = exp(-40.0 * pow(p - 0.333, 2.0));
-                float w3 = exp(-40.0 * pow(p - 0.666, 2.0));
+                float w2 = exp(-40.0 * pow(p - 0.33, 2.0));
+                float w3 = exp(-40.0 * pow(p - 0.66, 2.0));
                 float norm = w1 + w2 + w3 + 1e-6;
                 w1 /= norm; w2 /= norm; w3 /= norm;
 
                 float drift = u_scroll * 0.0004;
-                float yz_ang = u_time * 0.12 + drift;
-                float xz_ang = u_time * 0.08 + drift * 0.5;
-                mat3 rot = mat3(1,0,0,0,cos(yz_ang),sin(yz_ang),0,-sin(yz_ang),cos(yz_ang)) * mat3(cos(xz_ang),0,sin(xz_ang),0,1,0,-sin(xz_ang),0,cos(xz_ang));
+                float yz = u_time * 0.12 + drift;
+                float xz = u_time * 0.08 + drift * 0.5;
+                mat3 rot = mat3(1,0,0,0,cos(yz),sin(yz),0,-sin(yz),cos(yz)) * mat3(cos(xz),0,sin(xz),0,1,0,-sin(xz),0,cos(xz));
 
                 vec2 intensity = vec2(0.0);
                 for (float z = Z_FROM; z <= Z_TO; z += Z_STEP) {
@@ -410,7 +463,7 @@
                     intensity += (combined * combined) * (Z_STEP / (Z_TO - Z_FROM));
                 }
                 intensity /= 0.0001;
-                float fade = (1.0 - smoothstep(0.8, 1.8, u_scrollNorm)) * (u_isHome > 0.5 ? 1.0 : 0.4);
+                float fade = (1.0 - smoothstep(0.8, 2.0, u_scrollNorm)) * (u_isHome > 0.5 ? 1.0 : 0.4);
                 vec3 col = vec3(intensity.x * 0.08, (intensity.x + intensity.y) * 0.5, intensity.y * 0.15) + intensity.x * 0.18;
                 gl_FragColor = vec4(col * fade * 0.65, 1.0);
             }
@@ -469,29 +522,28 @@
         requestAnimationFrame(render);
     </script>
 
-    <!-- CMS Content Binding Logic -->
+    <!-- CMS Content Loading & Rendering Logic -->
     <script>
         let cms = null;
 
         async function loadCMS() {
             if (cms) return cms;
             try {
-                // Runtime check for CMS JSON files
                 const [sRes, pRes] = await Promise.all([
                     fetch('/content/settings.json', { cache: 'no-store' }),
                     fetch('/content/pages.json', { cache: 'no-store' })
                 ]);
-                if (!sRes.ok || !pRes.ok) throw new Error("JSON not found");
+                if (!sRes.ok || !pRes.ok) throw new Error("CMS JSON missing");
                 cms = { settings: await sRes.json(), pages: await pRes.json() };
                 return cms;
-            } catch (e) {
-                return null; // Silent return, HTML already has hardcoded text
+            } catch (err) {
+                return null;
             }
         }
 
         async function applyCMS() {
             const data = await loadCMS();
-            if (!data) return; // Exit if JSON files are missing
+            if (!data) return;
             const { settings, pages } = data;
 
             // Site Settings
@@ -499,14 +551,9 @@
             const logo = document.getElementById('site-logo');
             if (settings.logoImage && logo) {
                 logo.src = settings.logoImage;
-                logo.alt = settings.logoAlt || 'Logo';
                 logo.classList.remove('hidden');
                 document.getElementById('site-logo-fallback').classList.add('hidden');
             }
-            document.getElementById('footer-description').textContent = settings.footerDescription;
-            document.getElementById('footer-hq').textContent = settings.hqBlock;
-            document.getElementById('social-linkedin').href = settings.linkedinUrl;
-            document.getElementById('social-instagram').href = settings.instagramUrl;
 
             // Home Page
             const hb = pages.home;
@@ -516,27 +563,28 @@
             setText('home-subheadline', hb.subheadline);
             setText('home-cta-primary', hb.primaryCtaLabel); setText('home-cta-secondary', hb.secondaryCtaLabel);
             
+            // Re-render Stats if they exist in JSON
             const statsContainer = document.getElementById('home-stats');
             if (statsContainer && hb.stats) {
                 statsContainer.innerHTML = hb.stats.map(s => `
-                    <div class="glass p-8 rounded-2xl border border-white/10 group hover:border-emerald-500 transition-colors">
-                        <div class="text-emerald-500/60 uppercase tracking-widest text-[10px] font-bold mb-2 mono">${s.label}</div>
-                        <div class="text-2xl font-bold text-white tracking-tight">${s.value}</div>
-                    </div>
-                `).join('');
+                    <div class="glass-panel p-10 rounded-[2rem]">
+                        <div class="text-emerald-500/60 uppercase tracking-widest text-[10px] font-bold mb-3 mono">${s.label}</div>
+                        <div class="text-3xl font-bold text-white tracking-tight">${s.value}</div>
+                    </div>`).join('');
             }
 
-            // Technology Page
+            // Tech Page
             const t = pages.technology;
             setText('tech-title', t.title); setText('tech-eyebrow', t.eyebrow); setText('tech-section-title', t.sectionTitle);
             setText('tech-p1', t.p1); setText('tech-p2', t.p2);
-            const featuresContainer = document.getElementById('tech-features');
-            if (featuresContainer && t.features) {
-                featuresContainer.innerHTML = t.features.map(f => `
-                    <div class="p-8 bg-slate-50 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-                        <i data-lucide="${f.icon}" class="text-emerald-600 mb-4"></i>
-                        <h4 class="font-bold text-[11px] uppercase tracking-widest mb-2">${f.title}</h4>
-                        <p class="text-xs text-slate-500 leading-relaxed">${f.body}</p>
+            if (t.features) {
+                document.getElementById('tech-features').innerHTML = t.features.map(f => `
+                    <div class="p-10 bg-slate-50 rounded-[2rem] border border-slate-100 group transition-all hover:bg-white hover:shadow-xl">
+                        <div class="w-14 h-14 bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
+                            <i data-lucide="${f.icon}"></i>
+                        </div>
+                        <h4 class="font-bold text-lg uppercase tracking-tight mb-3">${f.title}</h4>
+                        <p class="text-slate-500 leading-relaxed font-medium">${f.body}</p>
                     </div>
                 `).join('');
             }
@@ -544,41 +592,43 @@
             // Specs Page
             const sp = pages.specs;
             setText('specs-title', sp.title); setText('specs-button-label', sp.buttonLabel);
-            const rowsContainer = document.getElementById('specs-rows');
-            if (rowsContainer && sp.rows) {
-                rowsContainer.innerHTML = sp.rows.map(r => `
+            if (sp.rows) {
+                document.getElementById('specs-rows').innerHTML = sp.rows.map(r => `
                     <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
-                        <td class="py-6 text-slate-400 uppercase text-[10px] font-bold">${r.parameter}</td>
-                        <td class="py-6 text-slate-700">${r.pp250}</td>
-                        <td class="py-6 text-slate-700">${r.pp1000}</td>
-                    </tr>
-                `).join('');
+                        <td class="py-7 px-4 text-slate-400 uppercase text-[10px] font-bold tracking-widest">${r.parameter}</td>
+                        <td class="py-7 px-4 font-semibold text-slate-800">${r.pp250}</td>
+                        <td class="py-7 px-4 font-bold text-emerald-700">${r.pp1000}</td>
+                    </tr>`).join('');
             }
+
+            // Footer
+            setText('footer-description', settings.footerDescription); setText('footer-hq', settings.hqBlock);
+            if (settings.linkedinUrl) document.getElementById('social-linkedin').href = settings.linkedinUrl;
+            if (settings.instagramUrl) document.getElementById('social-instagram').href = settings.instagramUrl;
 
             lucide.createIcons();
         }
 
         async function navTo(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            window.scrollTo(0,0);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             isHomePage = (pageId === 'home');
 
             if (['home', 'technology', 'specs'].includes(pageId)) {
                 document.getElementById('page-' + pageId).classList.add('active');
             } else {
                 const data = await loadCMS();
-                // If CMS not found, provide defaults for internal navigation
                 const genericData = data ? data.pages.generic : {
                     solutionsTitle: "Integrated Solutions",
-                    solutionsBody: "Rockwell H2 provides turnkey solutions for Port Logistics, Warehousing, and Remote Microgrids. Our PowerPods replace diesel dependence with site-generated hydrogen gas.",
+                    solutionsBody: "Rockwell H2 provides turnkey solutions for Port Logistics, Warehousing, and Remote Microgrids. Each deployment includes our modular PowerPod hardware cluster managed by an integrated software monitoring layer.",
                     companyTitle: "About Rockwell H2",
-                    companyBody: "Founded by energy transition veterans, Rockwell H2 Systems builds the infrastructure necessary to decarbonize heavy industrial clusters.",
-                    contactTitle: "Inquiry Path",
-                    contactBody: "Choose your inquiry path to be connected with our project engineering or municipal liaison teams. We respond within 48 hours.",
+                    companyBody: "Founded on the principle of industrial resilience, Rockwell H2 Systems engineers the hardware necessary to decarbonize the global supply chain. We focus on mid-stream infrastructure that bridges renewable generation with heavy-duty consumption.",
+                    contactTitle: "Inquiry Routing",
+                    contactBody: "Select your inquiry path to be connected with our regional engineering or investment teams. We maintain response times under 48 hours for institutional partners.",
                     safetyTitle: "Safety Standards",
-                    safetyBody: "Our hardware loop is NFPA 2 and ISO compliant, featuring automated leak detection and triple-redundant pressure management.",
-                    taxTitle: "45V Incentives",
-                    taxBody: "The Inflation Reduction Act provides up to $3.00/kg in production tax credits. Our pods are engineered to qualify for maximum tier credits through direct site-integrated generation."
+                    safetyBody: "Safety is our fundamental engineering constraint. Rockwell H2 pods are NFPA 2 and ASME B31.12 compliant, featuring triple-redundant pressure relief and automated leak mitigation systems.",
+                    taxTitle: "Incentives (45V)",
+                    taxBody: "The Inflation Reduction Act (IRA) provides significant production tax credits for clean hydrogen. Rockwell H2 pods are engineered to qualify for the highest tiers ($3.00/kg) by utilizing site-integrated renewable assets."
                 };
 
                 const map = {
@@ -599,7 +649,7 @@
 
         function toggleModal(s) { document.getElementById('modal-container').classList.toggle('hidden', !s); if (s) goToStep(1); }
         function goToStep(s) { document.querySelectorAll('.modal-step').forEach(st => st.classList.add('hidden')); document.getElementById('modal-step-' + s).classList.remove('hidden'); }
-        function goToForm(t) { goToStep(2); }
+        function goToForm(t) { document.getElementById('form-type-label').innerText = t; goToStep(2); }
         function handleForm(e) { e.preventDefault(); goToStep(3); }
         function toggleMobileMenu() { document.getElementById('mobile-menu').classList.toggle('hidden'); }
 

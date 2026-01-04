@@ -5,13 +5,29 @@ backend:
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
 
+local_backend: true
+
 collections:
   - name: "pages"
     label: "Pages"
     files:
-      - name: "home"
+      - file: "content/home.yml"
         label: "Home"
-        file: "content/home.md"
+        name: "home"
+        fields:
+          - { label: "Hero Badge", name: "hero_badge", widget: "string" }
+          - { label: "Hero Title", name: "hero_title", widget: "string" }
+          - { label: "Hero Subtitle", name: "hero_subtitle", widget: "text" }
+          - label: "Metrics"
+            name: "metrics"
+            widget: "list"
+            fields:
+              - { label: "Label", name: "label", widget: "string" }
+              - { label: "Value", name: "val", widget: "string" }
+
+      - file: "content/company.yml"
+        label: "Company"
+        name: "company"
         fields:
           - { label: "Title", name: "title", widget: "string" }
           - { label: "Body", name: "body", widget: "markdown" }
